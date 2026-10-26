@@ -132,7 +132,7 @@
   }
   .action-btn svg { width: 18px; height: 18px; }
   
-  /* Zona de Publicidad / DentiVrae */
+  /* Zona de Publicidad / NovaDent */
   .ad-zone {
     margin-bottom: 20px;
     border: 1px solid rgba(0, 240, 255, 0.3);
@@ -208,62 +208,43 @@
     white-space: nowrap;
   }
 
-  /* Zona de sorteo */
-  .raffle-zone { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 10px; margin-bottom: 20px; min-height: 160px; }
-  .raffle-section {
-    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(177, 74, 237, 0.3);
-    border-radius: 16px; padding: 12px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden;
+  /* QR Payment Section */
+  .payment-section {
+    margin-bottom: 20px;
+    text-align: center;
   }
-  .raffle-section::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(177, 74, 237, 0.05), rgba(0, 240, 255, 0.05));
-    opacity: 0; transition: opacity 0.3s ease;
+  .payment-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    color: var(--neon-cyan);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
   }
-  .raffle-section:hover::before { opacity: 1; }
-  .raffle-section.left { border-color: rgba(180, 255, 57, 0.3); }
-  .raffle-section.center { border-color: rgba(255, 45, 120, 0.5); background: linear-gradient(135deg, rgba(255, 45, 120, 0.08), rgba(177, 74, 237, 0.08)); }
-  .raffle-section.right { border-color: rgba(0, 240, 255, 0.3); }
-  .raffle-icon { font-size: 32px; margin-bottom: 6px; position: relative; z-index: 1; }
-  .raffle-title { font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; position: relative; z-index: 1; }
-  .raffle-text { font-size: 8px; color: var(--text-dim); line-height: 1.3; position: relative; z-index: 1; }
-  .raffle-product-img {
-    width: 60px; height: 60px; margin-bottom: 8px; position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: center; font-size: 48px;
-    filter: drop-shadow(0 0 10px rgba(255, 45, 120, 0.5));
+  .payment-qr-container {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
   }
-  .raffle-qr {
-    width: 80px; height: 80px; background: white; border-radius: 8px; padding: 4px;
-    margin-bottom: 6px; position: relative; z-index: 1; cursor: pointer; transition: transform 0.3s ease;
+  .payment-qr-container:hover {
+    transform: scale(1.05);
   }
-  .raffle-qr:hover { transform: scale(1.05); }
-  .raffle-qr img { width: 100%; height: 100%; object-fit: contain; }
-  .raffle-badge {
-    position: absolute; top: 6px; right: 6px; background: var(--neon-lime); color: var(--bg-dark);
-    font-size: 7px; font-weight: 700; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; z-index: 2;
+  .payment-qr-container img {
+    width: 150px;
+    height: 150px;
+    display: block;
   }
-  .raffle-badge.hot { background: var(--neon-pink); color: white; animation: pulse 1.5s infinite; }
-
-  /* Modal QR */
-  .qr-modal {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.95); z-index: 1000; justify-content: center;
-    align-items: center; backdrop-filter: blur(10px); animation: fadeIn 0.3s ease;
+  .payment-text {
+    margin-top: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
   }
-  .qr-modal.active { display: flex; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .qr-modal-content { position: relative; max-width: 90vw; max-height: 90vh; animation: zoomIn 0.4s ease; }
-  @keyframes zoomIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
-  .qr-modal-content img { max-width: 100%; max-height: 85vh; border-radius: 16px; box-shadow: 0 0 60px rgba(0, 240, 255, 0.5); }
-  .qr-modal-close {
-    position: absolute; top: -50px; right: 0; width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255, 45, 120, 0.9); border: 2px solid var(--neon-pink); color: white;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 45, 120, 0.6);
-  }
-  .qr-modal-close:hover { background: var(--neon-pink); transform: rotate(90deg) scale(1.1); }
-  .qr-modal-close svg { width: 24px; height: 24px; }
-  .qr-modal-hint { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); color: var(--text-dim); font-size: 11px; letter-spacing: 1px; white-space: nowrap; }
 
   /* Radio grid */
   .radio-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
@@ -403,13 +384,33 @@
   .install-btn:hover { transform: scale(1.1); }
   .install-btn svg { width: 28px; height: 28px; }
   @keyframes installPulse { 0%, 100% { box-shadow: 0 0 20px rgba(180, 255, 57, 0.6); } 50% { box-shadow: 0 0 35px rgba(180, 255, 57, 1); } }
+
+  /* Modal QR */
+  .qr-modal {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95); z-index: 1000; justify-content: center;
+    align-items: center; backdrop-filter: blur(10px); animation: fadeIn 0.3s ease;
+  }
+  .qr-modal.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .qr-modal-content { position: relative; max-width: 90vw; max-height: 90vh; animation: zoomIn 0.4s ease; }
+  @keyframes zoomIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+  .qr-modal-content img { max-width: 100%; max-height: 85vh; border-radius: 16px; box-shadow: 0 0 60px rgba(0, 240, 255, 0.5); }
+  .qr-modal-close {
+    position: absolute; top: -50px; right: 0; width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255, 45, 120, 0.9); border: 2px solid var(--neon-pink); color: white;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 45, 120, 0.6);
+  }
+  .qr-modal-close:hover { background: var(--neon-pink); transform: rotate(90deg) scale(1.1); }
+  .qr-modal-close svg { width: 24px; height: 24px; }
+  .qr-modal-hint { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); color: var(--text-dim); font-size: 11px; letter-spacing: 1px; white-space: nowrap; }
+
   @media (max-width: 480px) {
     .player-container { padding: 24px 20px; margin: 20px auto; }
     .brand { font-size: 18px; } .visualizer-wrap { height: 240px; }
     .action-btn { font-size: 8px; padding: 8px 4px; } .radio-card { padding: 8px 4px; }
     .radio-icon { width: 32px; height: 32px; font-size: 14px; } .radio-name { font-size: 7px; }
-    .raffle-zone { min-height: 140px; } .raffle-product-img { width: 50px; height: 50px; font-size: 40px; }
-    .raffle-qr { width: 70px; height: 70px; }
   }
 </style>
 </head>
@@ -465,7 +466,7 @@
           <button class="tab active" data-tab="radios">📻 RADIOS</button>
           <button class="tab" data-tab="upload">🎵 MÚSICA</button>
           <button class="tab" data-tab="video">🎬 VIDEO</button>
-          <button class="tab" data-tab="search">🔍 BUSCAR</button>
+          <button class="tab" data-tab="search"> BUSCAR</button>
         </div>
         <div class="tab-content active" id="tab-radios"><div id="radioListContent"><div class="empty-state">CARGANDO RADIOS...</div></div></div>
         <div class="tab-content" id="tab-upload">
@@ -507,39 +508,26 @@
       <button class="action-btn" id="openSearchBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>BUSCAR</button>
     </div>
 
-    <!-- 🦷 ZONA DE PUBLICIDAD: DentiVrae -->
+    <!--  ZONA DE PUBLICIDAD: NovaDent -->
     <a href="https://dentivrae.floot.app" target="_blank" class="ad-zone">
       <div class="ad-zone-content">
-        <div class="ad-zone-icon">🦷</div>
+        <div class="ad-zone-icon"></div>
         <div class="ad-zone-text">
-          <div class="ad-zone-title">DENTIVRAE</div>
+          <div class="ad-zone-title">NOVADENT</div>
           <div class="ad-zone-sub">Consultorio Odontológico</div>
         </div>
       </div>
       <div class="ad-zone-btn">CHATEAR AHORA ➔</div>
     </a>
 
-    <!-- Zona de sorteo -->
-    <div class="raffle-zone">
-      <div class="raffle-section left">
-        <div class="raffle-badge hot">HOT</div>
-        <div class="raffle-icon">🎟️</div>
-        <div class="raffle-title">SORTEO</div>
-        <div class="raffle-text">S/2.00<br>por ticket</div>
+    <!-- 💳 SECCIÓN DE PAGO QR -->
+    <div class="payment-section">
+      <div class="payment-title">YAPE / PLIN</div>
+      <div class="payment-qr-container" id="qrContainer">
+        <!-- ⚠️ REEMPLAZA ESTE 'src' CON EL LINK DE TU IMAGEN QR REAL -->
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=Paga+con+Yape+o+Plin&color=000000&bgcolor=ffffff" alt="QR de Pago" id="qrImage">
       </div>
-      <div class="raffle-section center">
-        <div class="raffle-product-img">🍳</div>
-        <div class="raffle-title">FREIDORA DE AIRE</div>
-        <div class="raffle-text">4.5L Digital<br>+ tickets = + chances</div>
-      </div>
-      <div class="raffle-section right">
-        <div class="raffle-qr" id="qrContainer">
-          <!-- ⚠️ REEMPLAZA ESTE 'src' CON EL LINK DE TU IMAGEN QR REAL -->
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Paga+con+Yape+o+Plin&color=000000&bgcolor=ffffff" alt="QR de Pago" id="qrImage">
-        </div>
-        <div class="raffle-title">YAPE / PLIN</div>
-        <div class="raffle-text">Paga tu ticket<br>para el sorteo</div>
-      </div>
+      <div class="payment-text">Toca para agrandar</div>
     </div>
 
     <div class="controls">
@@ -888,7 +876,7 @@
 
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.add('show'); });
   installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) { alert('Abre el menú del navegador (⋮) y selecciona "Agregar a pantalla de inicio"'); return; }
+    if (!deferredPrompt) { alert('Abre el menú del navegador () y selecciona "Agregar a pantalla de inicio"'); return; }
     deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') installBtn.classList.remove('show'); deferredPrompt = null;
   });
