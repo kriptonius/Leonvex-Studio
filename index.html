@@ -2,11 +2,19 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>LeonVex Studio - Live Radio</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeonVex Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#05060a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LeonVex">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="LeonVex Studio - Radio Player & Media Hub">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d78'/%3E%3Cstop offset='0.5' stop-color='%23b14aed'/%3E%3Cstop offset='1' stop-color='%2300f0ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='50' font-weight='900' fill='white' text-anchor='middle'%3ELV%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d78'/%3E%3Cstop offset='0.5' stop-color='%23b14aed'/%3E%3Cstop offset='1' stop-color='%2300f0ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='50' font-weight='900' fill='white' text-anchor='middle'%3ELV%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   :root {
     --neon-pink: #ff2d78;
@@ -49,7 +57,7 @@
   .scroll-container {
     position: relative;
     z-index: 1;
-    padding-bottom: 180px;
+    padding-bottom: 240px;
   }
 
   .player-container {
@@ -129,31 +137,24 @@
 
   .video-player {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: #000;
     display: none;
     z-index: 15;
   }
 
-  .video-player.active {
-    display: block;
-  }
+  .video-player.active { display: block; }
 
   .video-player video {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: contain;
   }
 
   .video-close-btn {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
+    top: 12px; right: 12px;
+    width: 36px; height: 36px;
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid var(--neon-pink);
@@ -177,9 +178,7 @@
 
   .now-playing {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
+    bottom: 20px; left: 20px; right: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -226,8 +225,7 @@
 
   .live-badge::before {
     content: '';
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: white;
   }
@@ -255,8 +253,7 @@
     border: none;
     color: var(--text-main);
     cursor: pointer;
-    width: 48px;
-    height: 48px;
+    width: 48px; height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -272,8 +269,7 @@
   .ctrl-btn svg { width: 24px; height: 24px; }
 
   .play-btn {
-    width: 80px;
-    height: 80px;
+    width: 80px; height: 80px;
     background: linear-gradient(135deg, var(--neon-pink), var(--neon-violet));
     box-shadow: 0 0 30px rgba(255, 45, 120, 0.6), 0 0 60px rgba(177, 74, 237, 0.3);
   }
@@ -321,13 +317,99 @@
 
   .action-btn svg { width: 18px; height: 18px; }
 
+  /* Zona libre para construir */
+  .build-zone {
+    min-height: 120px;
+    border: 2px dashed rgba(177, 74, 237, 0.2);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Radio mini cards - 2 filas de 4 */
+  .radio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .radio-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 10px 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .radio-card:hover {
+    border-color: rgba(177, 74, 237, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .radio-card.active {
+    border-color: var(--neon-cyan);
+    background: rgba(0, 240, 255, 0.08);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+  }
+
+  .radio-card.active::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--neon-lime);
+    box-shadow: 0 0 8px var(--neon-lime);
+    animation: pulse 1.5s infinite;
+  }
+
+  .radio-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+    margin: 0 auto 6px;
+    color: white;
+  }
+
+  .radio-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    color: var(--text-main);
+  }
+
+  .radio-rpp .radio-icon { background: linear-gradient(135deg, #ff2d78, #ff6b9d); }
+  .radio-inolvidable .radio-icon { background: linear-gradient(135deg, #b14aed, #d66bff); }
+  .radio-nuevaq .radio-icon { background: linear-gradient(135deg, #ff9500, #ffb84d); }
+  .radio-radiomar .radio-icon { background: linear-gradient(135deg, #00f0ff, #4dd0ff); }
+  .radio-studio92 .radio-icon { background: linear-gradient(135deg, #b4ff39, #d4ff7f); }
+  .radio-mod .radio-icon { background: linear-gradient(135deg, #ff2d78, #ff9500); }
+  .radio-lazona .radio-icon { background: linear-gradient(135deg, #00f0ff, #b14aed); }
+  .radio-ritmo .radio-icon { background: linear-gradient(135deg, #ff6b9d, #b14aed); }
+
   .main-panel {
     display: none;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(5, 6, 10, 0.98);
     border-radius: 20px;
     z-index: 20;
@@ -367,8 +449,7 @@
     background: rgba(255, 45, 120, 0.2);
     border: 1px solid var(--neon-pink);
     color: var(--neon-pink);
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -417,9 +498,7 @@
   .tab.active::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 20%;
-    right: 20%;
+    bottom: 0; left: 20%; right: 20%;
     height: 2px;
     background: var(--neon-cyan);
     box-shadow: 0 0 10px var(--neon-cyan);
@@ -459,15 +538,8 @@
     transform: translateX(4px);
   }
 
-  .list-item.active {
-    background: rgba(0, 240, 255, 0.1);
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-  }
-
   .list-item-cover {
-    width: 48px;
-    height: 48px;
+    width: 48px; height: 48px;
     border-radius: 10px;
     background: linear-gradient(135deg, var(--neon-violet), var(--neon-pink));
     display: flex;
@@ -486,8 +558,7 @@
   }
 
   .list-item-cover img {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
   }
 
@@ -516,8 +587,7 @@
   }
 
   .list-item-play {
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--neon-pink), var(--neon-violet));
     display: flex;
@@ -540,21 +610,6 @@
     transition: all 0.3s ease;
     margin-bottom: 20px;
     background: rgba(0, 240, 255, 0.05);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .upload-zone::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(177, 74, 237, 0.1));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .upload-zone:hover::before {
-    opacity: 1;
   }
 
   .upload-zone:hover {
@@ -564,13 +619,10 @@
   }
 
   .upload-zone svg {
-    width: 50px;
-    height: 50px;
+    width: 50px; height: 50px;
     color: var(--neon-cyan);
     margin-bottom: 12px;
     filter: drop-shadow(0 0 15px var(--neon-cyan));
-    position: relative;
-    z-index: 1;
   }
 
   .upload-zone-title {
@@ -580,16 +632,12 @@
     letter-spacing: 2px;
     margin-bottom: 6px;
     color: var(--text-main);
-    position: relative;
-    z-index: 1;
   }
 
   .upload-zone-sub {
     font-size: 10px;
     color: var(--text-dim);
     letter-spacing: 1px;
-    position: relative;
-    z-index: 1;
   }
 
   .upload-zone-hint {
@@ -597,8 +645,6 @@
     font-size: 9px;
     color: var(--neon-lime);
     letter-spacing: 1px;
-    position: relative;
-    z-index: 1;
   }
 
   .search-box {
@@ -654,97 +700,9 @@
     letter-spacing: 2px;
   }
 
-  .empty-state svg {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 12px;
-    opacity: 0.5;
-  }
-
-  .radio-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-
-  .radio-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
-    padding: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .radio-card:hover {
-    border-color: rgba(177, 74, 237, 0.4);
-    transform: translateY(-3px);
-  }
-
-  .radio-card.active {
-    border-color: var(--neon-cyan);
-    background: rgba(0, 240, 255, 0.05);
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
-  }
-
-  .radio-card.active::after {
-    content: '';
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--neon-lime);
-    box-shadow: 0 0 10px var(--neon-lime);
-    animation: pulse 1.5s infinite;
-  }
-
-  .radio-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: 22px;
-    margin-bottom: 14px;
-    color: white;
-  }
-
-  .radio-name {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
-    line-height: 1.3;
-  }
-
-  .radio-genre {
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  .radio-rpp .radio-icon { background: linear-gradient(135deg, #ff2d78, #ff6b9d); }
-  .radio-inolvidable .radio-icon { background: linear-gradient(135deg, #b14aed, #d66bff); }
-  .radio-nuevaq .radio-icon { background: linear-gradient(135deg, #ff9500, #ffb84d); }
-  .radio-radiomar .radio-icon { background: linear-gradient(135deg, #00f0ff, #4dd0ff); }
-  .radio-studio92 .radio-icon { background: linear-gradient(135deg, #b4ff39, #d4ff7f); }
-  .radio-mod .radio-icon { background: linear-gradient(135deg, #ff2d78, #ff9500); }
-  .radio-lazona .radio-icon { background: linear-gradient(135deg, #00f0ff, #b14aed); }
-
   .volume-fixed {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     z-index: 100;
     background: linear-gradient(180deg, transparent 0%, rgba(5, 6, 10, 0.95) 20%, rgba(5, 6, 10, 1) 100%);
     backdrop-filter: blur(20px);
@@ -763,8 +721,7 @@
   }
 
   .volume-wrap svg {
-    width: 24px;
-    height: 24px;
+    width: 24px; height: 24px;
     color: var(--neon-cyan);
     filter: drop-shadow(0 0 8px var(--neon-cyan));
   }
@@ -781,8 +738,7 @@
 
   .volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 20px; height: 20px;
     border-radius: 50%;
     background: var(--neon-cyan);
     box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px rgba(0, 240, 255, 0.5);
@@ -803,8 +759,7 @@
 
   .upload-notification {
     position: fixed;
-    top: 20px;
-    left: 50%;
+    top: 20px; left: 50%;
     transform: translateX(-50%) translateY(-100px);
     background: linear-gradient(135deg, var(--neon-lime), var(--neon-cyan));
     color: var(--bg-dark);
@@ -823,17 +778,55 @@
     transform: translateX(-50%) translateY(0);
   }
 
+  /* Botón instalar PWA */
+  .install-btn {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: linear-gradient(135deg, var(--neon-lime), var(--neon-cyan));
+    color: var(--bg-dark);
+    border: none;
+    border-radius: 50%;
+    width: 56px; height: 56px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(180, 255, 57, 0.6);
+    z-index: 99;
+    transition: all 0.3s ease;
+    animation: installPulse 2s infinite;
+  }
+
+  .install-btn.show { display: flex; }
+
+  .install-btn:hover { transform: scale(1.1); }
+
+  .install-btn svg { width: 28px; height: 28px; }
+
+  @keyframes installPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(180, 255, 57, 0.6); }
+    50% { box-shadow: 0 0 35px rgba(180, 255, 57, 1); }
+  }
+
   @media (max-width: 480px) {
     .player-container { padding: 24px 20px; margin: 20px auto; }
     .brand { font-size: 18px; }
     .visualizer-wrap { height: 240px; }
     .action-btn { font-size: 8px; padding: 8px 4px; }
+    .radio-card { padding: 8px 4px; }
+    .radio-icon { width: 32px; height: 32px; font-size: 14px; }
+    .radio-name { font-size: 7px; }
   }
 </style>
 </head>
 <body>
 
 <div class="upload-notification" id="uploadNotification">✓ ARCHIVO SUBIDO</div>
+
+<button class="install-btn" id="installBtn" title="Instalar app">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+</button>
 
 <div class="scroll-container">
   <div class="player-container">
@@ -869,10 +862,10 @@
         </div>
 
         <div class="tabs">
-          <button class="tab active" data-tab="radios"> RADIOS</button>
+          <button class="tab active" data-tab="radios">📻 RADIOS</button>
           <button class="tab" data-tab="upload">🎵 MÚSICA</button>
           <button class="tab" data-tab="video">🎬 VIDEO</button>
-          <button class="tab" data-tab="search">🔍 BUSCAR</button>
+          <button class="tab" data-tab="search"> BUSCAR</button>
         </div>
 
         <div class="tab-content active" id="tab-radios">
@@ -912,8 +905,7 @@
           </div>
           <div id="searchResults">
             <div class="empty-state">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              <div>Busca canciones en internet (Preview 30s)</div>
+              <div>Busca canciones en internet</div>
             </div>
           </div>
         </div>
@@ -939,6 +931,11 @@
       </button>
     </div>
 
+    <!-- Zona libre para construir más cosas -->
+    <div class="build-zone" id="buildZone">
+      ✦ ZONA LIBRE PARA CONSTRUIR ✦
+    </div>
+
     <div class="controls">
       <button class="ctrl-btn" id="prevBtn" title="Anterior">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
@@ -951,6 +948,7 @@
       </button>
     </div>
 
+    <!-- Mini radio cards - 2 filas de 4 -->
     <div class="radio-grid" id="radioGrid"></div>
   </div>
 </div>
@@ -966,14 +964,61 @@
 <audio id="audio" crossorigin="anonymous" preload="auto"></audio>
 
 <script>
+  // ====== MANIFEST PWA INLINE ======
+  const manifest = {
+    name: "LeonVex Studio",
+    short_name: "LeonVex",
+    description: "Radio Player & Media Hub - Perú",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#05060a",
+    theme_color: "#05060a",
+    orientation: "portrait",
+    icons: [
+      {
+        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d78'/%3E%3Cstop offset='0.5' stop-color='%23b14aed'/%3E%3Cstop offset='1' stop-color='%2300f0ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='50' font-weight='900' fill='white' text-anchor='middle'%3ELV%3C/text%3E%3C/svg%3E",
+        sizes: "192x192",
+        type: "image/svg+xml"
+      },
+      {
+        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d78'/%3E%3Cstop offset='0.5' stop-color='%23b14aed'/%3E%3Cstop offset='1' stop-color='%2300f0ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='50' font-weight='900' fill='white' text-anchor='middle'%3ELV%3C/text%3E%3C/svg%3E",
+        sizes: "512x512",
+        type: "image/svg+xml"
+      }
+    ]
+  };
+
+  const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  const manifestLink = document.createElement('link');
+  manifestLink.rel = 'manifest';
+  manifestLink.href = manifestURL;
+  document.head.appendChild(manifestLink);
+
+  // ====== SERVICE WORKER INLINE ======
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+      self.addEventListener('fetch', e => {
+        e.respondWith(fetch(e.request).catch(() => new Response('Offline')));
+      });
+    `;
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    const swURL = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swURL).catch(() => {});
+  }
+
+  // ====== DATOS ======
   const radios = [
-    { id: 'rpp', name: 'RPP NOTICIAS', genre: 'Noticias', color: '#ff2d78', searchName: 'RPP' },
-    { id: 'inolvidable', name: 'LA INOLVIDABLE', genre: 'Romántica / Clásicos', color: '#b14aed', searchName: 'La Inolvidable' },
-    { id: 'nuevaq', name: 'NUEVA Q', genre: 'Tropical / Cumbia', color: '#ff9500', searchName: 'Nueva Q' },
+    { id: 'rpp', name: 'RPP', genre: 'Noticias', color: '#ff2d78', searchName: 'RPP' },
+    { id: 'inolvidable', name: 'INOLVIDABLE', genre: 'Romántica', color: '#b14aed', searchName: 'La Inolvidable' },
+    { id: 'nuevaq', name: 'NUEVA Q', genre: 'Cumbia', color: '#ff9500', searchName: 'Nueva Q' },
     { id: 'radiomar', name: 'RADIOMAR', genre: 'Variada', color: '#00f0ff', searchName: 'Radiomar' },
-    { id: 'studio92', name: 'STUDIO 92', genre: 'Pop / Urbano', color: '#b4ff39', searchName: 'Studio 92' },
-    { id: 'moda', name: 'RADIO MODA', genre: 'Pop Internacional', color: '#ff2d78', searchName: 'Radio Moda' },
-    { id: 'lazona', name: 'LA ZONA', genre: 'Pop / Rock', color: '#00f0ff', searchName: 'La Zona' }
+    { id: 'studio92', name: 'STUDIO 92', genre: 'Pop', color: '#b4ff39', searchName: 'Studio 92' },
+    { id: 'moda', name: 'MODA', genre: 'Pop Int.', color: '#ff2d78', searchName: 'Radio Moda' },
+    { id: 'lazona', name: 'LA ZONA', genre: 'Rock', color: '#00f0ff', searchName: 'La Zona' },
+    { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica' }
   ];
 
   const audio = document.getElementById('audio');
@@ -992,7 +1037,6 @@
   const radioGrid = document.getElementById('radioGrid');
   const canvas = document.getElementById('visualizer');
   const ctx = canvas.getContext('2d');
-
   const mainPanel = document.getElementById('mainPanel');
   const panelTitle = document.getElementById('panelTitle');
   const closePanelBtn = document.getElementById('closePanelBtn');
@@ -1011,6 +1055,7 @@
   const searchResults = document.getElementById('searchResults');
   const radioListContent = document.getElementById('radioListContent');
   const uploadNotification = document.getElementById('uploadNotification');
+  const installBtn = document.getElementById('installBtn');
 
   let currentIndex = 0;
   let isPlaying = false;
@@ -1020,9 +1065,31 @@
   let searchTracks = [];
   let currentSource = 'radio';
   let radioCache = {};
+  let deferredPrompt = null;
 
   let audioCtx, analyser, source, dataArray;
 
+  // ====== PWA INSTALL ======
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.classList.add('show');
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) {
+      alert('Para instalar: abre el menú del navegador () y selecciona "Agregar a pantalla de inicio" o "Instalar app"');
+      return;
+    }
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      installBtn.classList.remove('show');
+    }
+    deferredPrompt = null;
+  });
+
+  // ====== AUDIO CONTEXT ======
   function initAudioContext() {
     if (audioCtx) return;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1042,6 +1109,7 @@
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
+  // ====== VISUALIZER ======
   function drawVisualizer() {
     requestAnimationFrame(drawVisualizer);
     const w = canvas.width, h = canvas.height;
@@ -1188,7 +1256,6 @@
       card.innerHTML = `
         <div class="radio-icon">${radio.name.charAt(0)}</div>
         <div class="radio-name">${radio.name}</div>
-        <div class="radio-genre">${radio.genre}</div>
       `;
       card.addEventListener('click', () => loadRadio(i, true));
       radioGrid.appendChild(card);
@@ -1212,10 +1279,10 @@
     document.getElementById(`tab-${tab}`).classList.add('active');
 
     const titles = { 
-      radios: ' RADIOS PERÚ', 
-      upload: '🎵 MI MÚSICA', 
+      radios: '📻 RADIOS PERÚ', 
+      upload: ' MI MÚSICA', 
       video: '🎬 MIS VIDEOS', 
-      search: '🔍 BUSCAR EN INTERNET' 
+      search: '🔍 BUSCAR' 
     };
     panelTitle.textContent = titles[tab];
   }
@@ -1230,11 +1297,8 @@
   openSearchBtn.addEventListener('click', () => openPanel('search'));
   closePanelBtn.addEventListener('click', closePanel);
 
-  // Upload música - CORREGIDO
-  uploadZone.addEventListener('click', () => {
-    fileInput.click();
-  });
-
+  // Upload música
+  uploadZone.addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', (e) => {
     if (e.target.files && e.target.files.length > 0) {
       handleFiles(e.target.files);
@@ -1242,34 +1306,11 @@
     }
   });
 
-  uploadZone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadZone.style.borderColor = 'var(--neon-lime)';
-    uploadZone.style.background = 'rgba(180, 255, 57, 0.1)';
-  });
-
-  uploadZone.addEventListener('dragleave', () => {
-    uploadZone.style.borderColor = '';
-    uploadZone.style.background = '';
-  });
-
-  uploadZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadZone.style.borderColor = '';
-    uploadZone.style.background = '';
-    if (e.dataTransfer.files.length > 0) {
-      handleFiles(e.dataTransfer.files);
-      showNotification(`${e.dataTransfer.files.length} ARCHIVO(S) SUBIDO(S)`);
-    }
-  });
-
   function handleFiles(files) {
     if (!files || files.length === 0) return;
-    
     let addedCount = 0;
     Array.from(files).forEach(file => {
-      if (file.type.startsWith('audio/') || 
-          file.name.match(/\.(mp3|wav|ogg|m4a|aac|flac|wma)$/i)) {
+      if (file.type.startsWith('audio/') || file.name.match(/\.(mp3|wav|ogg|m4a|aac|flac|wma)$/i)) {
         const url = URL.createObjectURL(file);
         const name = file.name.replace(/\.[^/.]+$/, '');
         localTracks.push({
@@ -1282,17 +1323,12 @@
         addedCount++;
       }
     });
-
-    if (addedCount > 0) {
-      renderLocalMusic();
-    } else {
-      alert('No se encontraron archivos de audio válidos');
-    }
+    if (addedCount > 0) renderLocalMusic();
   }
 
   function renderLocalMusic() {
     if (localTracks.length === 0) {
-      localMusicList.innerHTML = '<div class="empty-state">No hay música local aún.<br>Toca "SUBIR MÚSICA" para agregar canciones.</div>';
+      localMusicList.innerHTML = '<div class="empty-state">No hay música local</div>';
       return;
     }
     localMusicList.innerHTML = '';
@@ -1318,44 +1354,17 @@
     currentSource = 'local';
     hideVideoPlayer();
     const track = localTracks[index];
-    
-    // Limpiar errores previos
-    audio.removeEventListener('error', handleError);
-    audio.addEventListener('error', handleError);
-    
     audio.src = track.url;
     nowTitle.textContent = track.name;
     nowGenre.textContent = 'MÚSICA LOCAL';
-    
-    // Forzar carga del audio
-    audio.load();
-    
-    // Esperar a que cargue antes de reproducir
-    audio.addEventListener('canplaythrough', () => {
-      play();
-    }, { once: true });
-    
-    // Timeout de seguridad
-    setTimeout(() => {
-      if (audio.readyState < 3) {
-        play(); // Intentar reproducir de todas formas
-      }
-    }, 2000);
-    
+    isPlaying = false;
+    play();
     closePanel();
-  }
-
-  function handleError(e) {
-    console.error('Error de audio:', e);
-    setError();
-    alert('Error al reproducir el archivo. Intenta subirlo nuevamente.');
   }
 
   renderLocalMusic();
 
-  // Resto del código... (video, búsqueda, radios)
-  // [El resto del código permanece igual pero con mejores manejos de error]
-  
+  // Upload video
   videoUploadZone.addEventListener('click', () => videoInput.click());
   videoInput.addEventListener('change', (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -1368,8 +1377,7 @@
     if (!files || files.length === 0) return;
     let addedCount = 0;
     Array.from(files).forEach(file => {
-      if (file.type.startsWith('video/') || 
-          file.name.match(/\.(mp4|webm|mov|avi|mkv)$/i)) {
+      if (file.type.startsWith('video/') || file.name.match(/\.(mp4|webm|mov|avi|mkv)$/i)) {
         const url = URL.createObjectURL(file);
         const name = file.name.replace(/\.[^/.]+$/, '');
         localVideos.push({
@@ -1383,14 +1391,12 @@
         addedCount++;
       }
     });
-    if (addedCount > 0) {
-      renderLocalVideos();
-    }
+    if (addedCount > 0) renderLocalVideos();
   }
 
   function renderLocalVideos() {
     if (localVideos.length === 0) {
-      localVideoList.innerHTML = '<div class="empty-state">No hay videos aún.</div>';
+      localVideoList.innerHTML = '<div class="empty-state">No hay videos</div>';
       return;
     }
     localVideoList.innerHTML = '';
@@ -1439,10 +1445,9 @@
     playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
   });
 
+  // Búsqueda
   searchBtn.addEventListener('click', doSearch);
-  searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') doSearch();
-  });
+  searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') doSearch(); });
 
   async function doSearch() {
     const query = searchInput.value.trim();
@@ -1463,8 +1468,7 @@
       }));
       renderSearchResults();
     } catch (error) {
-      console.error('Error en búsqueda:', error);
-      searchResults.innerHTML = '<div class="empty-state">ERROR DE CONEXIÓN</div>';
+      searchResults.innerHTML = '<div class="empty-state">ERROR</div>';
     }
   }
 
@@ -1474,12 +1478,10 @@
       const item = document.createElement('div');
       item.className = 'list-item';
       item.innerHTML = `
-        <div class="list-item-cover">
-          ${track.cover ? `<img src="${track.cover}" alt="">` : '♪'}
-        </div>
+        <div class="list-item-cover">${track.cover ? `<img src="${track.cover}" alt="">` : '♪'}</div>
         <div class="list-item-info">
           <div class="list-item-name">${track.name}</div>
-          <div class="list-item-sub">${track.artist} • PREVIEW 30s</div>
+          <div class="list-item-sub">${track.artist}</div>
         </div>
         <div class="list-item-play">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -1496,12 +1498,13 @@
     const track = searchTracks[index];
     audio.src = track.url;
     nowTitle.textContent = track.name;
-    nowGenre.textContent = track.artist + ' • PREVIEW';
+    nowGenre.textContent = track.artist;
     isPlaying = false;
     play();
     closePanel();
   }
 
+  // Radios Perú
   async function loadPeruRadios() {
     try {
       const response = await fetch('https://de1.api.radio-browser.info/json/stations/bycountry/Peru');
@@ -1512,7 +1515,6 @@
         .slice(0, 100);
       renderRadioList();
     } catch (error) {
-      console.error('Error cargando radios:', error);
       radioListContent.innerHTML = '<div class="empty-state">ERROR AL CARGAR</div>';
     }
   }
@@ -1567,7 +1569,6 @@
       }
       return null;
     } catch (error) {
-      console.error('Error buscando radio:', error);
       return null;
     }
   }
@@ -1575,9 +1576,7 @@
   function showNotification(message) {
     uploadNotification.textContent = `✓ ${message}`;
     uploadNotification.classList.add('show');
-    setTimeout(() => {
-      uploadNotification.classList.remove('show');
-    }, 3000);
+    setTimeout(() => uploadNotification.classList.remove('show'), 3000);
   }
 
   function setLoading(loading) {
@@ -1596,7 +1595,7 @@
   }
 
   function setError() {
-    liveBadge.textContent = 'ERROR';
+    liveBadge.textContent = 'OFFLINE';
     liveBadge.className = 'live-badge error';
   }
 
@@ -1629,9 +1628,8 @@
       playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
       setLoading(false);
     }).catch(err => {
-      console.error('Error al reproducir:', err);
+      console.error('Error:', err);
       setError();
-      alert('Error: ' + err.message);
     });
   }
 
@@ -1649,47 +1647,34 @@
 
   playBtn.addEventListener('click', () => {
     if (currentSource === 'video') {
-      if (videoElement.paused) {
-        videoElement.play();
-      } else {
-        videoElement.pause();
-      }
+      if (videoElement.paused) videoElement.play();
+      else videoElement.pause();
     } else {
       if (isPlaying) pause(); else play();
     }
   });
 
   prevBtn.addEventListener('click', () => {
-    if (currentSource === 'video') {
-      if (localVideos.length > 0) {
-        const currentVideoUrl = videoElement.src;
-        const currentIndex = localVideos.findIndex(v => v.url === currentVideoUrl);
-        const newIndex = (currentIndex - 1 + localVideos.length) % localVideos.length;
-        playLocalVideo(newIndex);
-      }
+    if (currentSource === 'video' && localVideos.length > 0) {
+      const idx = localVideos.findIndex(v => v.url === videoElement.src);
+      playLocalVideo((idx - 1 + localVideos.length) % localVideos.length);
     } else if (currentSource === 'radio') {
       loadRadio(currentIndex - 1, isPlaying);
     } else if (currentSource === 'local' && localTracks.length > 0) {
-      const newIndex = (currentIndex - 1 + localTracks.length) % localTracks.length;
-      currentIndex = newIndex;
-      playLocalTrack(newIndex);
+      currentIndex = (currentIndex - 1 + localTracks.length) % localTracks.length;
+      playLocalTrack(currentIndex);
     }
   });
 
   nextBtn.addEventListener('click', () => {
-    if (currentSource === 'video') {
-      if (localVideos.length > 0) {
-        const currentVideoUrl = videoElement.src;
-        const currentIndex = localVideos.findIndex(v => v.url === currentVideoUrl);
-        const newIndex = (currentIndex + 1) % localVideos.length;
-        playLocalVideo(newIndex);
-      }
+    if (currentSource === 'video' && localVideos.length > 0) {
+      const idx = localVideos.findIndex(v => v.url === videoElement.src);
+      playLocalVideo((idx + 1) % localVideos.length);
     } else if (currentSource === 'radio') {
       loadRadio(currentIndex + 1, isPlaying);
     } else if (currentSource === 'local' && localTracks.length > 0) {
-      const newIndex = (currentIndex + 1) % localTracks.length;
-      currentIndex = newIndex;
-      playLocalTrack(newIndex);
+      currentIndex = (currentIndex + 1) % localTracks.length;
+      playLocalTrack(currentIndex);
     }
   });
 
@@ -1702,11 +1687,7 @@
   audio.volume = 0.7;
   videoElement.volume = 0.7;
 
-  audio.addEventListener('error', (e) => {
-    console.error('Error de audio:', e);
-    setError();
-  });
-
+  audio.addEventListener('error', () => setError());
   audio.addEventListener('waiting', () => setLoading(true));
   audio.addEventListener('playing', () => setLoading(false));
 
