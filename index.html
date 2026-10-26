@@ -176,8 +176,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
     box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+  }
+  .ad-zone-icon svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
   }
   .ad-zone-text {
     text-align: left;
@@ -208,42 +213,75 @@
     white-space: nowrap;
   }
 
-  /* QR Payment Section */
+  /* QR Payment Section - Elegant Design */
   .payment-section {
     margin-bottom: 20px;
     text-align: center;
   }
   .payment-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--neon-cyan);
-    letter-spacing: 2px;
-    margin-bottom: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
     text-transform: uppercase;
   }
-  .payment-qr-container {
-    background: white;
+  .payment-qr-btn {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(177, 74, 237, 0.1));
+    border: 2px solid rgba(0, 240, 255, 0.3);
     border-radius: 16px;
-    padding: 16px;
-    display: inline-block;
+    padding: 24px 32px;
     cursor: pointer;
-    transition: transform 0.3s ease;
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
   }
-  .payment-qr-container:hover {
-    transform: scale(1.05);
+  .payment-qr-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(177, 74, 237, 0.15));
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
-  .payment-qr-container img {
-    width: 150px;
-    height: 150px;
-    display: block;
+  .payment-qr-btn:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+    transform: translateY(-2px);
   }
-  .payment-text {
-    margin-top: 12px;
+  .payment-qr-btn:hover::before {
+    opacity: 1;
+  }
+  .payment-qr-icon {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    z-index: 1;
+  }
+  .payment-qr-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--neon-cyan);
+    filter: drop-shadow(0 0 10px var(--neon-cyan));
+  }
+  .payment-qr-text {
     font-family: 'Orbitron', sans-serif;
-    font-size: 10px;
+    font-size: 12px;
+    color: var(--text-main);
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .payment-qr-hint {
+    font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
   }
 
   /* Radio grid */
@@ -465,8 +503,8 @@
         <div class="tabs">
           <button class="tab active" data-tab="radios">📻 RADIOS</button>
           <button class="tab" data-tab="upload">🎵 MÚSICA</button>
-          <button class="tab" data-tab="video">🎬 VIDEO</button>
-          <button class="tab" data-tab="search"> BUSCAR</button>
+          <button class="tab" data-tab="video"> VIDEO</button>
+          <button class="tab" data-tab="search">🔍 BUSCAR</button>
         </div>
         <div class="tab-content active" id="tab-radios"><div id="radioListContent"><div class="empty-state">CARGANDO RADIOS...</div></div></div>
         <div class="tab-content" id="tab-upload">
@@ -511,7 +549,12 @@
     <!--  ZONA DE PUBLICIDAD: NovaDent -->
     <a href="https://dentivrae.floot.app" target="_blank" class="ad-zone">
       <div class="ad-zone-content">
-        <div class="ad-zone-icon"></div>
+        <div class="ad-zone-icon">
+          <!-- SVG Diente Molar Profesional -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.5 7.8 8.4 8.3 9.2C7.1 10.3 6.5 11.8 6.5 13.5C6.5 15.5 7.8 17.2 9.5 18V21C9.5 21.6 10 22 10.5 22H13.5C14 22 14.5 21.6 14.5 21V18C16.2 17.2 17.5 15.5 17.5 13.5C17.5 11.8 16.9 10.3 15.7 9.2C16.2 8.4 16.5 7.5 16.5 6.5C16.5 4 14.5 2 12 2ZM12 4C13.4 4 14.5 5.1 14.5 6.5C14.5 7.2 14.2 7.8 13.8 8.3L12 10.5L10.2 8.3C9.8 7.8 9.5 7.2 9.5 6.5C9.5 5.1 10.6 4 12 4Z"/>
+          </svg>
+        </div>
         <div class="ad-zone-text">
           <div class="ad-zone-title">NOVADENT</div>
           <div class="ad-zone-sub">Consultorio Odontológico</div>
@@ -520,14 +563,19 @@
       <div class="ad-zone-btn">CHATEAR AHORA ➔</div>
     </a>
 
-    <!-- 💳 SECCIÓN DE PAGO QR -->
+    <!-- 💳 SECCIÓN DE PAGO QR - ELEGANTE -->
     <div class="payment-section">
       <div class="payment-title">YAPE / PLIN</div>
-      <div class="payment-qr-container" id="qrContainer">
-        <!-- ⚠️ REEMPLAZA ESTE 'src' CON EL LINK DE TU IMAGEN QR REAL -->
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=Paga+con+Yape+o+Plin&color=000000&bgcolor=ffffff" alt="QR de Pago" id="qrImage">
+      <div class="payment-qr-btn" id="qrContainer">
+        <div class="payment-qr-icon">
+          <!-- Icono QR elegante -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 3H11V11H3V3M5 5V9H9V5H5M13 3H21V11H13V3M15 5V9H19V5H15M3 13H11V21H3V13M5 15V19H9V15H5M13 21V13H21V21H13M15 15V19H19V15H15Z"/>
+          </svg>
+        </div>
+        <div class="payment-qr-text">PAGO QR</div>
+        <div class="payment-qr-hint">Toca para ver código</div>
       </div>
-      <div class="payment-text">Toca para agrandar</div>
     </div>
 
     <div class="controls">
@@ -876,7 +924,7 @@
 
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.add('show'); });
   installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) { alert('Abre el menú del navegador () y selecciona "Agregar a pantalla de inicio"'); return; }
+    if (!deferredPrompt) { alert('Abre el menú del navegador (⋮) y selecciona "Agregar a pantalla de inicio"'); return; }
     deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') installBtn.classList.remove('show'); deferredPrompt = null;
   });
