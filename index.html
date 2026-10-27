@@ -422,7 +422,7 @@
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
       </button>
     </div>
-    <div class="search-note">Vista previa de 30 s por canción (límite de iTunes). Al terminar, pasa sola a la siguiente. Para la canción completa usa el botón de YouTube.</div>
+    <div class="search-note">Canciones completas de Jamendo (música libre de artistas independientes). Si no hay resultados, muestra vistas previas de 30 s de iTunes. Al terminar, pasa sola a la siguiente.</div>
     <a class="yt-link" id="ytLink" href="#" target="_blank" rel="noopener">▶ ESCUCHAR COMPLETA EN YOUTUBE</a>
     <div id="searchResults"><div class="empty-state"><div>Busca canciones en internet</div></div></div>
   </div>
@@ -791,25 +791,35 @@
   // ====== BÚSQUEDA ======
   searchBtn.addEventListener('click', doSearch);
   searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') doSearch(); });
+  // Jamendo = música COMPLETA y legal (artistas independientes). Para tu propio client_id gratis: devportal.jamendo.com
+  const JAMENDO_CLIENT_ID = '709fa152';
+  async function searchJamendo(q) {
+    const url = `https://api.jamendo.com/v3.0/tracks/?client_id=${JAMENDO_CLIENT_ID}&format=json&limit=30&audioformat=mp32&imagesize=200&include=musicinfo&order=popularity_total&search=${encodeURIComponent(q)}`;
+    const res = await fetch(url); const data = await res.json();
+    return (data.results || []).filter(r => r.audio).map(r => ({ name: (r.name || '').toUpperCase(), artist: (r.artist_name || '').toUpperCase(), url: r.audio, cover: r.image || r.album_image || '', full: true }));
+  }
+  async function searchItunes(q) {
+    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&limit=30`);
+    const data = await res.json();
+    return (data.results || []).filter(r => r.previewUrl && r.trackName).map(r => ({ name: r.trackName.toUpperCase(), artist: r.artistName.toUpperCase(), url: r.previewUrl, cover: (r.artworkUrl100 || '').replace('100x100', '300x300'), full: false }));
+  }
   async function doSearch() {
     const query = searchInput.value.trim(); if (!query) return;
     searchResults.innerHTML = '<div class="empty-state">BUSCANDO...</div>';
-    try {
-      const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=30`);
-      const data = await res.json();
-      const valid = data.results.filter(r => r.previewUrl && r.trackName);
-      if (valid.length === 0) { searchResults.innerHTML = '<div class="empty-state">Sin resultados</div>'; return; }
-      searchTracks = valid.map(r => ({ name: r.trackName.toUpperCase(), artist: r.artistName.toUpperCase(), url: r.previewUrl, cover: (r.artworkUrl100 || '').replace('100x100', '300x300') }));
-      searchResults.innerHTML = '';
-      searchTracks.forEach((track, i) => {
-        const item = document.createElement('div'); item.className = 'list-item';
-        item.innerHTML = `<div class="list-item-cover">${track.cover ? `<img src="${track.cover}" alt="">` : '♪'}</div><div class="list-item-info"><div class="list-item-name"></div><div class="list-item-sub"></div></div><div class="list-item-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>`;
-        item.querySelector('.list-item-name').textContent = track.name;
-        item.querySelector('.list-item-sub').textContent = track.artist;
-        item.addEventListener('click', () => { playSearch(i); closePanel(); });
-        searchResults.appendChild(item);
-      });
-    } catch (e) { searchResults.innerHTML = '<div class="empty-state">ERROR DE CONEXIÓN</div>'; }
+    let tracks = [];
+    try { tracks = await searchJamendo(query); } catch (e) { tracks = []; }
+    if (tracks.length === 0) { try { tracks = await searchItunes(query); } catch (e) { tracks = []; } }
+    if (tracks.length === 0) { searchResults.innerHTML = '<div class="empty-state">Sin resultados o sin conexión</div>'; return; }
+    searchTracks = tracks;
+    searchResults.innerHTML = '';
+    searchTracks.forEach((track, i) => {
+      const item = document.createElement('div'); item.className = 'list-item';
+      item.innerHTML = `<div class="list-item-cover">${track.cover ? `<img src="${track.cover}" alt="">` : '♪'}</div><div class="list-item-info"><div class="list-item-name"></div><div class="list-item-sub"></div></div><div class="list-item-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>`;
+      item.querySelector('.list-item-name').textContent = track.name;
+      item.querySelector('.list-item-sub').textContent = track.artist + (track.full ? ' • COMPLETA' : ' • 30s');
+      item.addEventListener('click', () => { playSearch(i); closePanel(); });
+      searchResults.appendChild(item);
+    });
   }
   function playSearch(i) {
     if (searchTracks.length === 0) return;
@@ -817,9 +827,9 @@
     const track = searchTracks[trackIndex];
     currentSource = 'search'; hideVideoPlayer();
     audio.src = track.url;
-    nowTitle.textContent = track.name; nowGenre.textContent = track.artist + ' • PREVIEW 30s';
-    ytLink.href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(track.name + ' ' + track.artist);
-    ytLink.classList.add('show');
+    nowTitle.textContent = track.name; nowGenre.textContent = track.artist + (track.full ? ' • COMPLETA' : ' • PREVIEW 30s');
+    if (track.full) ytLink.classList.remove('show');
+    else { ytLink.href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(track.name + ' ' + track.artist); ytLink.classList.add('show'); }
     startAudio('search');
   }
 
