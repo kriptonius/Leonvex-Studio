@@ -19,6 +19,7 @@
     --neon-pink: #ff2d78; --neon-violet: #b14aed; --neon-cyan: #00f0ff;
     --neon-lime: #b4ff39; --neon-orange: #ff9500; --bg-dark: #05060a;
     --bg-panel: rgba(10, 12, 20, 0.92); --text-main: #e8ecff; --text-dim: #7a83a8;
+    --whatsapp-green: #25D366;
   }
   body {
     font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main);
@@ -134,7 +135,7 @@
   
   /* Zona de Publicidad / NovaDent */
   .ad-zone {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     border: 1px solid rgba(0, 240, 255, 0.3);
     border-radius: 16px;
     background: linear-gradient(135deg, rgba(0, 240, 255, 0.05), rgba(177, 74, 237, 0.05));
@@ -213,30 +214,107 @@
     white-space: nowrap;
   }
 
-  /* QR Payment Section - Elegant Design */
-  .payment-section {
-    margin-bottom: 20px;
+  /* WhatsApp Button - Profesional */
+  .whatsapp-section {
+    margin-top: 24px;
     text-align: center;
+  }
+  .whatsapp-btn {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    border: none;
+    border-radius: 16px;
+    padding: 16px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .whatsapp-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  .whatsapp-btn:hover::before {
+    left: 100%;
+  }
+  .whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5);
+  }
+  .whatsapp-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+  .whatsapp-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: white;
+  }
+  .whatsapp-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+    text-align: left;
+  }
+  .whatsapp-subtext {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Divider */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(177, 74, 237, 0.3), transparent);
+    margin: 20px 0;
+  }
+
+  /* QR Payment Section - Al final, oculto inicialmente */
+  .payment-section {
+    margin-top: 20px;
+    text-align: center;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+  .payment-section:hover {
+    opacity: 1;
   }
   .payment-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: 11px;
-    color: var(--neon-cyan);
+    font-size: 10px;
+    color: var(--text-dim);
     letter-spacing: 3px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     text-transform: uppercase;
   }
   .payment-qr-btn {
-    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(177, 74, 237, 0.1));
-    border: 2px solid rgba(0, 240, 255, 0.3);
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(177, 74, 237, 0.08));
+    border: 1px solid rgba(0, 240, 255, 0.2);
     border-radius: 16px;
-    padding: 24px 32px;
+    padding: 20px 28px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     position: relative;
     overflow: hidden;
   }
@@ -244,21 +322,21 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(177, 74, 237, 0.15));
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(177, 74, 237, 0.1));
     opacity: 0;
     transition: opacity 0.3s ease;
   }
   .payment-qr-btn:hover {
     border-color: var(--neon-cyan);
-    box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
     transform: translateY(-2px);
   }
   .payment-qr-btn:hover::before {
     opacity: 1;
   }
   .payment-qr-icon {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     position: relative;
     z-index: 1;
   }
@@ -266,18 +344,18 @@
     width: 100%;
     height: 100%;
     fill: var(--neon-cyan);
-    filter: drop-shadow(0 0 10px var(--neon-cyan));
+    filter: drop-shadow(0 0 8px var(--neon-cyan));
   }
   .payment-qr-text {
     font-family: 'Orbitron', sans-serif;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-main);
     letter-spacing: 2px;
     position: relative;
     z-index: 1;
   }
   .payment-qr-hint {
-    font-size: 9px;
+    font-size: 8px;
     color: var(--text-dim);
     letter-spacing: 1px;
     position: relative;
@@ -502,8 +580,8 @@
         </div>
         <div class="tabs">
           <button class="tab active" data-tab="radios">📻 RADIOS</button>
-          <button class="tab" data-tab="upload">🎵 MÚSICA</button>
-          <button class="tab" data-tab="video"> VIDEO</button>
+          <button class="tab" data-tab="upload"> MÚSICA</button>
+          <button class="tab" data-tab="video">🎬 VIDEO</button>
           <button class="tab" data-tab="search">🔍 BUSCAR</button>
         </div>
         <div class="tab-content active" id="tab-radios"><div id="radioListContent"><div class="empty-state">CARGANDO RADIOS...</div></div></div>
@@ -546,11 +624,10 @@
       <button class="action-btn" id="openSearchBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>BUSCAR</button>
     </div>
 
-    <!--  ZONA DE PUBLICIDAD: NovaDent -->
+    <!-- 🦷 ZONA DE PUBLICIDAD: NovaDent -->
     <a href="https://dentivrae.floot.app" target="_blank" class="ad-zone">
       <div class="ad-zone-content">
         <div class="ad-zone-icon">
-          <!-- SVG Diente Molar Profesional -->
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.5 7.8 8.4 8.3 9.2C7.1 10.3 6.5 11.8 6.5 13.5C6.5 15.5 7.8 17.2 9.5 18V21C9.5 21.6 10 22 10.5 22H13.5C14 22 14.5 21.6 14.5 21V18C16.2 17.2 17.5 15.5 17.5 13.5C17.5 11.8 16.9 10.3 15.7 9.2C16.2 8.4 16.5 7.5 16.5 6.5C16.5 4 14.5 2 12 2ZM12 4C13.4 4 14.5 5.1 14.5 6.5C14.5 7.2 14.2 7.8 13.8 8.3L12 10.5L10.2 8.3C9.8 7.8 9.5 7.2 9.5 6.5C9.5 5.1 10.6 4 12 4Z"/>
           </svg>
@@ -563,12 +640,37 @@
       <div class="ad-zone-btn">CHATEAR AHORA ➔</div>
     </a>
 
-    <!-- 💳 SECCIÓN DE PAGO QR - ELEGANTE -->
+    <div class="controls">
+      <button class="ctrl-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+      <button class="ctrl-btn play-btn" id="playBtn"><svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="ctrl-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+    </div>
+
+    <div class="radio-grid" id="radioGrid"></div>
+
+    <!-- Separador -->
+    <div class="section-divider"></div>
+
+    <!-- 💬 BOTÓN WHATSAPP - DESPLAZADO HACIA ABAJO -->
+    <div class="whatsapp-section">
+      <a href="https://wa.me/51963845681?text=Hola!%20Me%20interesa%20conocer%20más%20sobre%20el%20producto%20digital" target="_blank" class="whatsapp-btn">
+        <div class="whatsapp-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="whatsapp-text">CONSULTAR POR WHATSAPP</div>
+          <div class="whatsapp-subtext">+51 963 845 681</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- 💳 SECCIÓN DE PAGO QR - AL FINAL -->
     <div class="payment-section">
-      <div class="payment-title">YAPE / PLIN</div>
+      <div class="payment-title">Método de pago</div>
       <div class="payment-qr-btn" id="qrContainer">
         <div class="payment-qr-icon">
-          <!-- Icono QR elegante -->
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 3H11V11H3V3M5 5V9H9V5H5M13 3H21V11H13V3M15 5V9H19V5H15M3 13H11V21H3V13M5 15V19H9V15H5M13 21V13H21V21H13M15 15V19H19V15H15Z"/>
           </svg>
@@ -578,13 +680,6 @@
       </div>
     </div>
 
-    <div class="controls">
-      <button class="ctrl-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-      <button class="ctrl-btn play-btn" id="playBtn"><svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
-      <button class="ctrl-btn" id="nextBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-    </div>
-
-    <div class="radio-grid" id="radioGrid"></div>
   </div>
 </div>
 
