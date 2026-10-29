@@ -167,6 +167,11 @@
   .whatsapp-btn-compact:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 25px rgba(37, 211, 102, 0.5); }
   .whatsapp-btn-compact svg { width: 30px; height: 30px; fill: white; position: relative; z-index: 1; }
 
+  .tv-title { font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--text-dim); letter-spacing: 3px; margin: 18px 0 10px; text-align: center; }
+  .tv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .tv-card .radio-icon { background: linear-gradient(135deg, #ff9500, #ff2d78); }
+  .tv-card .radio-icon svg { width: 20px; height: 20px; fill: white; }
+  .tv-card.tv-other .radio-icon { background: linear-gradient(135deg, #00f0ff, #b14aed); }
   .section-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(177, 74, 237, 0.3), transparent); margin: 20px 0; }
 
   .payment-section { margin-top: 20px; text-align: center; opacity: 0.8; transition: opacity 0.3s ease; }
@@ -486,6 +491,9 @@
 
     <div class="radio-grid" id="radioGrid"></div>
 
+    <div class="tv-title">📺 TV EN VIVO</div>
+    <div class="tv-grid" id="tvGrid"></div>
+
     <div class="section-divider"></div>
 
     <div class="payment-section">
@@ -631,7 +639,7 @@
   function getCurrentColor() {
     if (currentSource === 'radio' && radios[currentIndex]) return radios[currentIndex].color;
     if (currentSource === 'local') return '#b4ff39';
-    if (currentSource === 'video' || currentSource === 'search') return '#ff9500';
+    if (currentSource === 'video' || currentSource === 'search' || currentSource === 'tv') return '#ff9500';
     return '#00f0ff';
   }
   drawVisualizer();
@@ -650,11 +658,11 @@
   function showVideoPlayer() { videoPlayer.classList.add('active'); canvas.style.display = 'none'; }
   function hideVideoPlayer() {
     videoPlayer.classList.remove('active'); canvas.style.display = 'block';
-    videoElement.pause(); videoElement.removeAttribute('src'); videoElement.load();
+    stopChannel(videoElement);
   }
   $('videoCloseBtn').addEventListener('click', () => {
     hideVideoPlayer();
-    if (currentSource === 'video') { currentSource = 'radio'; isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; }
+    if (currentSource === 'video' || currentSource === 'tv') { currentSource = 'radio'; renderTvGrid(); isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; }
   });
 
   function renderRadioGrid() {
@@ -776,6 +784,7 @@
     trackIndex = (i + localVideos.length) % localVideos.length;
     const video = localVideos[trackIndex];
     currentSource = 'video'; audio.pause(); ytLink.classList.remove('show');
+    stopChannel(videoElement); renderTvGrid();
     showVideoPlayer();
     videoElement.src = video.url; videoElement.volume = parseFloat(volumeSlider.value);
     nowTitle.textContent = video.name; nowGenre.textContent = 'VIDEO LOCAL';
@@ -784,7 +793,7 @@
     if (p && p.catch) p.catch(() => { liveBadge.textContent = 'TOCA ▶'; });
   }
   videoElement.addEventListener('play', () => { isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; });
-  videoElement.addEventListener('pause', () => { if (currentSource === 'video') { isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; } });
+  videoElement.addEventListener('pause', () => { if (currentSource === 'video' || currentSource === 'tv') { isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; } });
   videoElement.addEventListener('ended', () => { if (currentSource === 'video' && localVideos.length > 1) playVideoLocal(trackIndex + 1); });
   videoElement.addEventListener('error', () => { if (currentSource === 'video' && videoElement.getAttribute('src')) { liveBadge.textContent = 'FORMATO NO SOPORTADO'; liveBadge.className = 'live-badge error'; } });
 
@@ -831,6 +840,104 @@
     if (track.full) ytLink.classList.remove('show');
     else { ytLink.href = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(track.name + ' ' + track.artist); ytLink.classList.add('show'); }
     startAudio('search');
+  }
+
+  // ====== TV EN VIVO (HLS con respaldo automático) ======
+  const TV_CHANNELS = [
+    { name: "LATINA", short: "LATINA", urls: [
+      "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+      "https://cablered.iptvperu.tv:1936/cablered/latina_new/playlist.m3u8",
+      "http://190.93.224.42/LATINA/index.m3u8" ]},
+    { name: "AMÉRICA TV", short: "AMÉRICA", urls: [
+      "https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8",
+      "http://45.171.108.253:8888/AMERICA/index.m3u8",
+      "http://190.93.224.42/AMERICA-TV/index.m3u8",
+      "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/america.stream/playlist.m3u8",
+      "http://187.102.210.46/AMERICA/index.m3u8" ]},
+    { name: "TV PERÚ", short: "TV PERÚ", urls: [
+      "https://cdnhd.iblups.com/hls/777b4d4cc0984575a7d14f6ee57dbcaf7.m3u8",
+      "https://cablered.iptvperu.tv:1936/cablered/tvperu_new/playlist.m3u8",
+      "http://190.93.224.42/TV-PERU/index.m3u8",
+      "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/tvperu.stream/playlist.m3u8",
+      "http://187.102.210.46/TVPERU/index.m3u8",
+      "http://181.224.200.5:2277/play/a0dx/index.m3u8",
+      "http://187.102.208.209:8000/play/a0ay/index.m3u8" ]},
+  ];
+  let _seq = 0, _hls = null, _timer = null, tvIndex = -1;
+
+  function loadHls() {
+    return new Promise((ok, no) => {
+      if (window.Hls) return ok();
+      const sc = document.createElement('script');
+      sc.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js';
+      sc.onload = ok; sc.onerror = no; document.head.appendChild(sc);
+    });
+  }
+  function stopChannel(video) {
+    _seq++; clearTimeout(_timer);
+    if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; }
+    video.onplaying = null; video.onerror = null;
+    video.pause(); video.removeAttribute('src'); video.load();
+  }
+  function playChannel(video, ch, status = () => {}) {
+    stopChannel(video);
+    const seq = ++_seq;
+    const urls = location.protocol === 'https:' ? ch.urls.filter(u => u.startsWith('https')) : ch.urls;
+    let i = 0;
+    const native = !!video.canPlayType('application/vnd.apple.mpegurl');
+    const next = () => {
+      if (seq !== _seq) return;
+      if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; }
+      clearTimeout(_timer);
+      if (i >= urls.length) { status('Sin señal ahora mismo', true); return; }
+      const url = urls[i++];
+      status('Conectando… ' + i + '/' + urls.length);
+      _timer = setTimeout(next, 15000);
+      video.onplaying = () => { if (seq === _seq) { clearTimeout(_timer); status('En vivo'); } };
+      video.onerror = next;
+      if (native) { video.src = url; video.play().catch(() => {}); return; }
+      loadHls().then(() => {
+        if (seq !== _seq) return;
+        if (!Hls.isSupported()) return next();
+        _hls = new Hls({ maxBufferLength: 20, manifestLoadingMaxRetry: 1, levelLoadingMaxRetry: 1 });
+        _hls.on(Hls.Events.ERROR, (e, d) => { if (d.fatal) next(); });
+        _hls.loadSource(url); _hls.attachMedia(video); video.play().catch(() => {});
+      }).catch(next);
+    };
+    next();
+  }
+
+  const TV_ICON = '<svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg>';
+  function renderTvGrid() {
+    const grid = $('tvGrid'); if (!grid) return;
+    grid.innerHTML = '';
+    TV_CHANNELS.forEach((ch, i) => {
+      const card = document.createElement('div');
+      card.className = 'radio-card tv-card' + ((currentSource === 'tv' && tvIndex === i) ? ' active' : '');
+      card.innerHTML = `<div class="radio-icon">${TV_ICON}</div><div class="radio-name">${ch.short}</div>`;
+      card.addEventListener('click', () => playTv(i));
+      grid.appendChild(card);
+    });
+    const other = document.createElement('div');
+    other.className = 'radio-card tv-card tv-other' + '';
+    other.innerHTML = `<div class="radio-icon">🌐</div><div class="radio-name">OTROS</div>`;
+    other.addEventListener('click', () => window.open('https://famelack.com', '_blank', 'noopener'));
+    grid.appendChild(other);
+  }
+  function playTv(i, customCh) {
+    const ch = customCh || TV_CHANNELS[i]; if (!ch) return;
+    tvIndex = customCh ? 99 : i;
+    currentSource = 'tv'; audio.pause(); ytLink.classList.remove('show');
+    showVideoPlayer(); videoElement.volume = parseFloat(volumeSlider.value);
+    nowTitle.textContent = ch.name; nowGenre.textContent = 'TV EN VIVO';
+    liveBadge.textContent = 'CONECTANDO...'; liveBadge.className = 'live-badge loading';
+    renderTvGrid();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    playChannel(videoElement, ch, (t, fail) => {
+      if (currentSource !== 'tv') return;
+      if (t === 'En vivo') { liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; }
+      else { liveBadge.textContent = t.toUpperCase(); liveBadge.className = 'live-badge ' + (fail ? 'error' : 'loading'); }
+    });
   }
 
   // ====== RADIOS ======
@@ -908,12 +1015,12 @@
     else if (currentSource === 'radio') { loadRadio(currentIndex, true); }
   }
   function pause() {
-    if (currentSource === 'video') videoElement.pause(); else audio.pause();
+    if (currentSource === 'video' || currentSource === 'tv') videoElement.pause(); else audio.pause();
     isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; liveBadge.textContent = 'PAUSADO'; liveBadge.className = 'live-badge error';
   }
 
   playBtn.addEventListener('click', () => {
-    if (currentSource === 'video') { videoElement.paused ? videoElement.play() : videoElement.pause(); }
+    if (currentSource === 'video' || currentSource === 'tv') { videoElement.paused ? videoElement.play() : videoElement.pause(); }
     else if (isPlaying) pause();
     else if (currentSource === 'radio' && !audio.src) loadRadio(currentIndex, true);
     else startAudio(currentSource);
@@ -924,6 +1031,7 @@
     else if (currentSource === 'local') playLocal(trackIndex + dir);
     else if (currentSource === 'search') playSearch(trackIndex + dir);
     else if (currentSource === 'video') playVideoLocal(trackIndex + dir);
+    else if (currentSource === 'tv') playTv((tvIndex + dir + 3) % 3);
   }
   prevBtn.addEventListener('click', () => step(-1));
   nextBtn.addEventListener('click', () => step(1));
@@ -948,7 +1056,7 @@
   });
 
   async function preloadRadios() { for (const radio of radios) await findRadioUrl(radio.searchName); }
-  preloadRadios(); renderRadioGrid(); loadRadio(0);
+  preloadRadios(); renderRadioGrid(); renderTvGrid(); loadRadio(0);
 </script>
 </body>
 </html>
