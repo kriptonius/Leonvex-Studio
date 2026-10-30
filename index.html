@@ -904,33 +904,58 @@
   function stopChannel(video) {
     _seq++; clearTimeout(_timer);
     if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; }
-    video.onplaying = null; video.onerror = null;
+    video.onplaying = null; video.onerror = null; video.onwaiting = null; video.onstalled = null; video.ontimeupdate = null;
     video.pause(); video.removeAttribute('src'); video.load();
   }
   function playChannel(video, ch, status = () => {}) {
     stopChannel(video);
     const seq = ++_seq;
     const urls = location.protocol === 'https:' ? ch.urls.filter(u => u.startsWith('https')) : ch.urls;
-    let i = 0;
-    const native = !!video.canPlayType('application/vnd.apple.mpegurl');
+    let i = 0, round = 0, stallTimer = null, recovered = false;
+    const START_TIMEOUT = 9000, STALL_TIMEOUT = 8000;
+    const clearAll = () => { clearTimeout(_timer); clearTimeout(stallTimer); };
+
     const next = () => {
       if (seq !== _seq) return;
       if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; }
-      clearTimeout(_timer);
-      if (i >= urls.length) { status('Sin señal ahora mismo', true); return; }
+      clearAll(); recovered = false;
+      if (i >= urls.length) {
+        // Da una segunda vuelta completa antes de rendirse
+        if (round < 1 && urls.length > 0) { round++; i = 0; }
+        else { status('Sin señal ahora mismo', true); return; }
+      }
       const url = urls[i++];
       status('Conectando… ' + i + '/' + urls.length);
-      _timer = setTimeout(next, 15000);
-      video.onplaying = () => { if (seq === _seq) { clearTimeout(_timer); status('En vivo'); } };
+      _timer = setTimeout(next, START_TIMEOUT);
+
+      // Si se queda "girando" (buffering) más de 8 s, salta a la siguiente señal
+      const armStall = () => { clearTimeout(stallTimer); stallTimer = setTimeout(() => { if (seq === _seq) { status('Señal lenta, probando otra…'); next(); } }, STALL_TIMEOUT); };
+      const disarmStall = () => clearTimeout(stallTimer);
+      video.onplaying = () => { if (seq === _seq) { clearTimeout(_timer); disarmStall(); status('En vivo'); } };
+      video.onwaiting = () => { if (seq === _seq && video.readyState < 3) armStall(); };
+      video.onstalled = video.onwaiting;
+      video.ontimeupdate = () => { if (seq === _seq && !video.paused) disarmStall(); };
       video.onerror = next;
-      if (native) { video.src = url; video.play().catch(() => {}); return; }
-      loadHls().then(() => {
+
+      loadHls().then(() => true, () => false).then(ok => {
         if (seq !== _seq) return;
-        if (!Hls.isSupported()) return next();
-        _hls = new Hls({ maxBufferLength: 20, manifestLoadingMaxRetry: 1, levelLoadingMaxRetry: 1 });
-        _hls.on(Hls.Events.ERROR, (e, d) => { if (d.fatal) next(); });
-        _hls.loadSource(url); _hls.attachMedia(video); video.play().catch(() => {});
-      }).catch(next);
+        if (ok && window.Hls && Hls.isSupported()) {
+          _hls = new Hls({
+            lowLatencyMode: false, maxBufferLength: 30, liveSyncDurationCount: 3,
+            manifestLoadingTimeOut: 8000, manifestLoadingMaxRetry: 1,
+            levelLoadingTimeOut: 8000, levelLoadingMaxRetry: 1,
+            fragLoadingTimeOut: 12000, fragLoadingMaxRetry: 2
+          });
+          _hls.on(Hls.Events.ERROR, (e, d) => {
+            if (!d.fatal) return;
+            if (d.type === Hls.ErrorTypes.MEDIA_ERROR && !recovered) { recovered = true; try { _hls.recoverMediaError(); return; } catch (x) {} }
+            next();
+          });
+          _hls.loadSource(url); _hls.attachMedia(video); video.play().catch(() => {});
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = url; video.play().catch(() => {});
+        } else { next(); }
+      });
     };
     next();
   }
