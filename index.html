@@ -938,6 +938,13 @@
       sc.onload = ok; sc.onerror = no; document.head.appendChild(sc);
     });
   }
+  // Precarga: baja el reproductor HLS y abre conexión con los servidores de TV ANTES de que toques un canal
+  window.addEventListener('load', () => setTimeout(() => {
+    loadHls().catch(() => {});
+    const hosts = new Set();
+    TV_CHANNELS.forEach(c => c.urls.forEach(u => { if (u.startsWith('https')) { try { hosts.add(new URL(u).origin); } catch (e) {} } }));
+    hosts.forEach(o => { const l = document.createElement('link'); l.rel = 'preconnect'; l.href = o; document.head.appendChild(l); });
+  }, 800));
   function stopChannel(video) {
     _seq++; clearTimeout(_timer);
     if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; }
@@ -947,9 +954,11 @@
   function playChannel(video, ch, status = () => {}) {
     stopChannel(video);
     const seq = ++_seq;
-    const urls = location.protocol === 'https:' ? ch.urls.filter(u => u.startsWith('https')) : ch.urls;
+    let urls = location.protocol === 'https:' ? ch.urls.filter(u => u.startsWith('https')) : ch.urls.slice();
+    const memKey = 'lv_tv_ok_' + ch.name;
+    try { const good = localStorage.getItem(memKey); if (good && urls.includes(good)) urls = [good].concat(urls.filter(u => u !== good)); } catch (e) {}
     let i = 0, round = 0, stallTimer = null, recovered = false;
-    const START_TIMEOUT = 9000, STALL_TIMEOUT = 8000;
+    const START_TIMEOUT = 7000, STALL_TIMEOUT = 8000;
     const clearAll = () => { clearTimeout(_timer); clearTimeout(stallTimer); };
 
     const next = () => {
@@ -968,7 +977,7 @@
       // Si se queda "girando" (buffering) más de 8 s, salta a la siguiente señal
       const armStall = () => { clearTimeout(stallTimer); stallTimer = setTimeout(() => { if (seq === _seq) { status('Señal lenta, probando otra…'); next(); } }, STALL_TIMEOUT); };
       const disarmStall = () => clearTimeout(stallTimer);
-      video.onplaying = () => { if (seq === _seq) { clearTimeout(_timer); disarmStall(); status('En vivo'); } };
+      video.onplaying = () => { if (seq === _seq) { clearTimeout(_timer); disarmStall(); status('En vivo'); try { localStorage.setItem(memKey, url); } catch (e) {} } };
       video.onwaiting = () => { if (seq === _seq && video.readyState < 3) armStall(); };
       video.onstalled = video.onwaiting;
       video.ontimeupdate = () => { if (seq === _seq && !video.paused) disarmStall(); };
@@ -978,7 +987,9 @@
         if (seq !== _seq) return;
         if (ok && window.Hls && Hls.isSupported()) {
           _hls = new Hls({
-            lowLatencyMode: false, maxBufferLength: 30, liveSyncDurationCount: 3,
+            lowLatencyMode: false, maxBufferLength: 20, backBufferLength: 10, liveSyncDurationCount: 3,
+            startLevel: 0, testBandwidth: false, startFragPrefetch: true, capLevelToPlayerSize: true,
+            abrEwmaDefaultEstimate: 1500000,
             manifestLoadingTimeOut: 8000, manifestLoadingMaxRetry: 1,
             levelLoadingTimeOut: 8000, levelLoadingMaxRetry: 1,
             fragLoadingTimeOut: 12000, fragLoadingMaxRetry: 2
