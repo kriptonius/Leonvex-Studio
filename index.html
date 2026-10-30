@@ -472,6 +472,7 @@
     <div id="localVideoList"></div>
   </div>
   <div class="tab-content" id="tab-shop"><div id="shopList"></div></div>
+  <div class="tab-content" id="tab-tvother"><div id="tvOtherList"></div></div>
   <div class="tab-content" id="tab-search">
     <div class="search-box">
       <input type="text" class="search-input" id="searchInput" placeholder="Buscar canción o artista...">
@@ -752,7 +753,7 @@
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     const tabBtn = document.querySelector(`[data-tab="${tab}"]`); if (tabBtn) tabBtn.classList.add('active');
     $(`tab-${tab}`).classList.add('active');
-    const titles = { radios: '📻 RADIOS PERÚ', upload: '🎵 MI MÚSICA', video: '🎬 MIS VIDEOS', search: '🔍 BUSCAR', shop: '🛍️ SHOP LEONVEX' };
+    const titles = { radios: '📻 RADIOS PERÚ', upload: '🎵 MI MÚSICA', video: '🎬 MIS VIDEOS', search: '🔍 BUSCAR', shop: '🛍️ SHOP LEONVEX', tvother: '📺 MÁS CANALES' };
     panelTitle.textContent = titles[tab];
     if (tab === 'radios' && allPeruRadios.length === 0) loadPeruRadios();
   }
@@ -919,16 +920,24 @@
       "http://190.93.224.42/AMERICA-TV/index.m3u8",
       "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/america.stream/playlist.m3u8",
       "http://187.102.210.46/AMERICA/index.m3u8" ]},
-    { name: "TV PERÚ", short: "TV PERÚ", urls: [
-      "https://cdnhd.iblups.com/hls/777b4d4cc0984575a7d14f6ee57dbcaf7.m3u8",
-      "https://cablered.iptvperu.tv:1936/cablered/tvperu_new/playlist.m3u8",
-      "http://190.93.224.42/TV-PERU/index.m3u8",
-      "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/tvperu.stream/playlist.m3u8",
-      "http://187.102.210.46/TVPERU/index.m3u8",
-      "http://181.224.200.5:2277/play/a0dx/index.m3u8",
-      "http://187.102.208.209:8000/play/a0ay/index.m3u8" ]},
+    { name: "ATV", short: "ATV", urls: [
+      "https://d2b5h5wyivfnfl.cloudfront.net/live/25046411-8673-4dec-8ae8-5b41984f34e1/ts:abr.m3u8",
+      "https://d19e55ehz2il4i.cloudfront.net/ts:abr.m3u8" ]},
   ];
-  let _seq = 0, _hls = null, _timer = null, tvIndex = -1;
+  // Más canales (botón OTROS). Solo señales https (las http las bloquea el navegador).
+  const TV_EXTRA = [
+    { name: "TV PERÚ", sub: "Canal del Estado", urls: [
+      "https://cdnhd.iblups.com/hls/777b4d4cc0984575a7d14f6ee57dbcaf7.m3u8",
+      "https://cablered.iptvperu.tv:1936/cablered/tvperu_new/playlist.m3u8" ]},
+    { name: "RPP TV", sub: "Noticias", urls: [
+      "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/rpptv/rpptv.smil/playlist.m3u8" ]},
+    { name: "GLOBAL TV", sub: "Variedades", urls: [
+      "https://live-evg7.tv360.bitel.com.pe/bitel/global_abr/playlist.m3u8",
+      "https://cablered.iptvperu.tv:1936/cablered/global.stream/playlist.m3u8" ]},
+    { name: "LATINA NOTICIAS", sub: "24/7", urls: [
+      "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8" ]},
+  ];
+  let _seq = 0, _hls = null, _timer = null, tvIndex = -1, tvExtraIndex = -1;
 
   function loadHls() {
     return new Promise((ok, no) => {
@@ -942,7 +951,7 @@
   window.addEventListener('load', () => setTimeout(() => {
     loadHls().catch(() => {});
     const hosts = new Set();
-    TV_CHANNELS.forEach(c => c.urls.forEach(u => { if (u.startsWith('https')) { try { hosts.add(new URL(u).origin); } catch (e) {} } }));
+    TV_CHANNELS.concat(TV_EXTRA).forEach(c => c.urls.forEach(u => { if (u.startsWith('https')) { try { hosts.add(new URL(u).origin); } catch (e) {} } }));
     hosts.forEach(o => { const l = document.createElement('link'); l.rel = 'preconnect'; l.href = o; document.head.appendChild(l); });
   }, 800));
   function stopChannel(video) {
@@ -1022,12 +1031,29 @@
     const other = document.createElement('div');
     other.className = 'radio-card tv-card tv-other' + '';
     other.innerHTML = `<div class="radio-icon">🌐</div><div class="radio-name">OTROS</div>`;
-    other.addEventListener('click', () => window.open('https://famelack.com', '_blank', 'noopener'));
+    other.addEventListener('click', openTvOther);
     grid.appendChild(other);
   }
-  function playTv(i, customCh) {
+  function renderTvOther() {
+    const box = $('tvOtherList'); if (!box) return;
+    box.innerHTML = '';
+    TV_EXTRA.forEach((ch, k) => {
+      const item = document.createElement('div'); item.className = 'list-item';
+      item.innerHTML = '<div class="list-item-cover video-cover">📺</div><div class="list-item-info"><div class="list-item-name"></div><div class="list-item-sub"></div></div><div class="list-item-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>';
+      item.querySelector('.list-item-name').textContent = ch.name;
+      item.querySelector('.list-item-sub').textContent = ch.sub + ' • EN VIVO';
+      item.addEventListener('click', () => { closePanel(); playTv(99, ch, k); });
+      box.appendChild(item);
+    });
+    const more = document.createElement('div'); more.className = 'list-item';
+    more.innerHTML = '<div class="list-item-cover">🌐</div><div class="list-item-info"><div class="list-item-name">MÁS EN FAMELACK</div><div class="list-item-sub">TV y radios de todo el mundo</div></div>';
+    more.addEventListener('click', () => window.open('https://famelack.com', '_blank', 'noopener'));
+    box.appendChild(more);
+  }
+  function openTvOther() { renderTvOther(); openPanel('tvother'); }
+  function playTv(i, customCh, extraIdx) {
     const ch = customCh || TV_CHANNELS[i]; if (!ch) return;
-    tvIndex = customCh ? 99 : i;
+    tvIndex = customCh ? 99 : i; tvExtraIndex = customCh ? (extraIdx == null ? -1 : extraIdx) : -1;
     currentSource = 'tv'; audio.pause(); ytLink.classList.remove('show');
     showVideoPlayer(); videoElement.volume = parseFloat(volumeSlider.value);
     nowTitle.textContent = ch.name; nowGenre.textContent = 'TV EN VIVO';
@@ -1201,7 +1227,10 @@
     else if (currentSource === 'local') playLocal(trackIndex + dir);
     else if (currentSource === 'search') playSearch(trackIndex + dir);
     else if (currentSource === 'video') playVideoLocal(trackIndex + dir);
-    else if (currentSource === 'tv') playTv((tvIndex + dir + 3) % 3);
+    else if (currentSource === 'tv') {
+      if (tvIndex === 99 && tvExtraIndex >= 0) { const k = (tvExtraIndex + dir + TV_EXTRA.length) % TV_EXTRA.length; playTv(99, TV_EXTRA[k], k); }
+      else playTv((tvIndex + dir + TV_CHANNELS.length) % TV_CHANNELS.length);
+    }
   }
   prevBtn.addEventListener('click', () => step(-1));
   nextBtn.addEventListener('click', () => step(1));
