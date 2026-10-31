@@ -609,12 +609,12 @@
   const radios = [
     { id: 'rpp', name: 'RPP', genre: 'Noticias', color: '#ff2d78', searchName: 'RPP' },
     { id: 'inolvidable', name: 'INOLVIDABLE', genre: 'Romántica', color: '#b14aed', searchName: 'La Inolvidable' },
-    { id: 'nuevaq', name: 'NUEVA Q', genre: 'Cumbia', color: '#ff9500', searchName: 'Nueva Q' },
+    { id: 'nuevaq', name: 'NUEVA Q', genre: 'Cumbia', color: '#ff9500', searchName: 'Nueva Q', alts: ['Radio Nueva Q', 'NuevaQ', 'Nueva'] },
     { id: 'radiomar', name: 'RADIOMAR', genre: 'Variada', color: '#00f0ff', searchName: 'Radiomar' },
     { id: 'studio92', name: 'STUDIO 92', genre: 'Pop', color: '#b4ff39', searchName: 'Studio 92' },
     { id: 'moda', name: 'MODA', genre: 'Pop Int.', color: '#ff2d78', searchName: 'Radio Moda' },
     { id: 'lazona', name: 'LA ZONA', genre: 'Rock', color: '#00f0ff', searchName: 'La Zona' },
-    { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica' }
+    { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica', alts: ['Ritmo Romántica', 'Radio Ritmo', 'Ritmo'] }
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -1183,13 +1183,33 @@
     if (!secure) list.forEach(st => { [st.url_resolved, st.url].forEach(u => { if (u && u.startsWith('http:')) add(u); }); });
     return out.slice(0, 8);
   }
-  async function findRadioUrls(searchName) {
+  const norm = (t) => (t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  async function searchStations(term, peruOnly, hideBroken) {
+    const qs = '?name=' + encodeURIComponent(term) + (peruOnly ? '&countrycode=PE' : '') + '&hidebroken=' + hideBroken + '&order=clickcount&reverse=true&limit=80';
+    return rbFetch('/json/stations/search' + qs);
+  }
+  async function findRadioUrls(searchName, alts) {
     if (radioCache[searchName] && radioCache[searchName].length) return radioCache[searchName];
-    const data = await rbFetch('/json/stations/byname/' + encodeURIComponent(searchName) + '?hidebroken=true&limit=60');
-    const q = searchName.toLowerCase();
-    let list = data.filter(st => st.url_resolved && st.name && st.name.toLowerCase().includes(q) && !st.hls);
-    const peru = list.filter(st => st.countrycode === 'PE'); if (peru.length) list = peru;
-    list.sort((a, b) => ((b.lastcheckok | 0) - (a.lastcheckok | 0)) || ((b.clickcount || 0) - (a.clickcount || 0)));
+    const terms = [searchName].concat(alts || []);
+    let list = [];
+    outer:
+    for (const term of terms) {
+      const tokens = norm(term).split(' ').filter(Boolean);
+      for (const peruOnly of [true, false]) {
+        for (const hide of ['true', 'false']) {
+          let data = [];
+          try { data = await searchStations(term, peruOnly, hide); } catch (e) { data = []; }
+          data = (data || []).filter(st => st.url_resolved && st.name && !st.hls);
+          // coincidencia flexible: sin tildes, todas las palabras presentes (en cualquier orden)
+          const rank = (a, b) => ((b.lastcheckok | 0) - (a.lastcheckok | 0)) || ((b.clickcount || 0) - (a.clickcount || 0));
+          const strict = data.filter(st => { const n = norm(st.name); return tokens.every(t => n.includes(t)); }).sort(rank);
+          // al final, emisoras parecidas (misma primera palabra) por si las exactas están caídas
+          const loose = tokens.length > 1 ? data.filter(st => !strict.includes(st) && norm(st.name).includes(tokens[0])).sort(rank) : [];
+          const m = strict.concat(loose);
+          if (m.length) { list = m; break outer; }
+        }
+      }
+    }
     let urls = buildRadioUrls(list);
     try { const good = localStorage.getItem('lv_radio_ok_' + searchName); if (good) urls = [good].concat(urls.filter(u => u !== good)); } catch (e) {}
     if (urls.length) radioCache[searchName] = urls;
@@ -1237,7 +1257,7 @@
       radioSeq++; clearTimeout(radioTimer); audio.pause();
       setSearching();
       let urls = [];
-      try { urls = await findRadioUrls(radio.searchName); } catch (e) { urls = []; }
+      try { urls = await findRadioUrls(radio.searchName, radio.alts); } catch (e) { urls = []; }
       if (my !== currentIndex || currentSource !== 'radio') return;   // el usuario ya cambió de emisora
       if (urls.length) playRadioQueue(urls, radio.searchName); else setError();
     }
@@ -1303,7 +1323,7 @@
     if (outcome === 'accepted') installBtn.classList.remove('show'); deferredPrompt = null;
   });
 
-  async function preloadRadios() { for (const radio of radios) { try { await findRadioUrls(radio.searchName); } catch (e) {} } }
+  async function preloadRadios() { for (const radio of radios) { try { await findRadioUrls(radio.searchName, radio.alts); } catch (e) {} } }
   try { renderRadioGrid(); } catch (e) { console.error(e); }
   try { renderTvGrid(); } catch (e) { console.error(e); }
   try { loadRadio(0); } catch (e) { console.error(e); }
