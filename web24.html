@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#14573f">
+<title>ESSTRADA Web 24 Horas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: una columna pensada para celular (tráfico de Facebook). Titular grande, dos paquetes, formulario, QR de pago. */
+:root{
+  --bg:#f2f5ee; --surface:#ffffff; --surface2:#e4ebdc; --fg:#14231b; --muted:#546357;
+  --line:#cfd9c6; --green:#14573f; --green-ink:#f2f5ee; --sun:#f0b323; --sun-ink:#2a1f00;
+  --wa:#1f8a4c; --wa-ink:#ffffff; --bad:#b3341f; --qr-bg:#ffffff; --qr-fg:#000000;
+  --font-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --font-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1712; --surface:#16231b; --surface2:#1f3126; --fg:#eaf1e4; --muted:#9fb0a2;
+  --line:#2c4034; --green:#58c28f; --green-ink:#08150e; --sun:#f0b323; --sun-ink:#2a1f00;
+  --wa:#4cc27f; --wa-ink:#07230f; --bad:#ff8a73; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1712; --surface:#16231b; --surface2:#1f3126; --fg:#eaf1e4; --muted:#9fb0a2;
+  --line:#2c4034; --green:#58c28f; --green-ink:#08150e; --sun:#f0b323; --sun-ink:#2a1f00;
+  --wa:#4cc27f; --wa-ink:#07230f; --bad:#ff8a73; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:0 40px}
+.wrap{max-width:560px;margin-inline:auto;display:flex;flex-direction:column;gap:28px}
+.top{display:flex;justify-content:space-between;align-items:center;padding-block:16px 0;font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--green)}
+.top span:last-child{color:var(--muted);letter-spacing:.12em}
+h1{font-family:var(--font-display);font-weight:800;font-size:clamp(34px,10vw,48px);line-height:1.03;margin:0;text-wrap:balance;letter-spacing:-.02em}
+h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--sun) 62%,var(--sun) 92%,transparent 92%)}
+h2{font-family:var(--font-display);font-weight:800;font-size:24px;line-height:1.1;margin:0 0 6px;text-wrap:balance}
+.lead{font-size:18px;color:var(--muted);margin:14px 0 0;max-width:46ch}
+.cta{display:inline-flex;margin-top:18px;background:var(--green);color:var(--green-ink);text-decoration:none;font-weight:700;border-radius:12px;min-height:50px;align-items:center;padding:0 22px}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.list li{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.list li:first-child{border-top:0}
+.list b{display:block}
+.list span.t{color:var(--muted);font-size:14px}
+.tick{flex:none;width:22px;height:22px;border-radius:50%;background:var(--green);color:var(--green-ink);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pk{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:14px;display:block;width:100%;min-width:0}
+.pk[aria-pressed="true"]{border-color:var(--green);box-shadow:0 0 0 3px color-mix(in srgb,var(--green) 22%,transparent)}
+.pk .n{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--green)}
+.pk b{display:block;font-family:var(--font-display);font-size:34px;line-height:1.1;font-variant-numeric:tabular-nums}
+.pk .d{display:block;font-size:13px;color:var(--muted)}
+.pk .a{display:block;margin-top:8px;font-size:12px;font-weight:700;background:var(--sun);color:var(--sun-ink);border-radius:99px;padding:2px 10px;width:max-content;max-width:100%}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+form{display:flex;flex-direction:column;gap:12px}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+input,select{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:48px}
+input[aria-invalid="true"]{border-color:var(--bad)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.err{color:var(--bad);font-size:13px;min-height:18px;margin:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:52px;border-radius:12px;border:0;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+.btn.wa{background:var(--wa);color:var(--wa-ink)}
+.btn.line{background:transparent;color:var(--fg);border:1px solid var(--line);min-height:44px}
+.qr{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.qr .tile{background:var(--qr-bg);padding:14px;border-radius:14px;border:1px solid var(--line);width:min(100%,300px)}
+.qr img{display:block;width:100%;height:auto;image-rendering:pixelated}
+.amount{font-family:var(--font-display);font-weight:800;font-size:44px;line-height:1;color:var(--green);font-variant-numeric:tabular-nums}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.steps li{counter-increment:s;display:flex;gap:12px}
+.steps li::before{content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:var(--sun);color:var(--sun-ink);font-weight:800;display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.note{font-size:13px;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:99px;font-size:13px;font-weight:600;z-index:30}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:380px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span>ESSTRADA Co.</span><span>Pichari · VRAEM</span></div>
+
+  <section>
+    <h1>Su negocio en Google y en <em>WhatsApp</em>, en 24 horas</h1>
+    <p class="lead">Hacemos la página web de su farmacia, hostal, taller, restaurante o tienda, con un botón que lleva al cliente directo a su WhatsApp.</p>
+    <a class="cta" href="#inscribirse">Quiero mi página</a>
+  </section>
+
+  <section>
+    <h2>Qué recibe</h2>
+    <ul class="list">
+      <li><span class="tick">✓</span><div><b>Página lista para el celular</b><span class="t">Con su nombre, servicios, precios, horario y dirección.</span></div></li>
+      <li><span class="tick">✓</span><div><b>Botón de WhatsApp con mensaje listo</b><span class="t">El cliente toca y le escribe con su consulta ya redactada.</span></div></li>
+      <li><span class="tick">✓</span><div><b>Entrega en 24 horas</b><span class="t">Se cuenta desde que recibimos su adelanto y los datos de su negocio.</span></div></li>
+    </ul>
+  </section>
+
+  <section id="inscribirse">
+    <h2>Elija su paquete</h2>
+    <p class="note" style="margin:0 0 12px">Se paga la mitad como adelanto y el resto al recibir su página.</p>
+    <div class="grid2">
+      <button type="button" class="pk" data-p="express" aria-pressed="true"><span class="n">Express</span><b>S/150</b><span class="d">Página + botón de WhatsApp</span><span class="a">Adelanto S/75</span></button>
+      <button type="button" class="pk" data-p="pro" aria-pressed="false"><span class="n">Pro</span><b>S/250</b><span class="d">Página + chatbot de preguntas frecuentes</span><span class="a">Adelanto S/125</span></button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Inscríbase</h2>
+    <p class="note" style="margin:0 0 12px">Al tocar el botón se abre WhatsApp con sus datos listos para enviar.</p>
+    <form id="f" novalidate>
+      <div><label for="f-n">Su nombre</label><input id="f-n" autocomplete="name" placeholder="Ej. Rosa Quispe"></div>
+      <div><label for="f-b">Nombre de su negocio</label><input id="f-b" placeholder="Ej. Farmacia Santa Rosa"></div>
+      <div class="grid2">
+        <div><label for="f-r">Rubro</label><select id="f-r"><option>Farmacia</option><option>Ferretería</option><option>Hostal</option><option>Restaurante</option><option>Taller</option><option>Repuestos de moto</option><option>Consultorio</option><option>Tienda</option><option>Otro</option></select></div>
+        <div><label for="f-z">Zona</label><select id="f-z"><option>Pichari</option><option>Llochegua</option><option>Santa Rosa</option><option>Otra</option></select></div>
+      </div>
+      <div><label for="f-w">Su WhatsApp (9 dígitos)</label><input id="f-w" inputmode="tel" autocomplete="tel" maxlength="14" placeholder="987654321"></div>
+      <p class="err" id="err" role="alert"></p>
+      <a class="btn wa" id="go" href="#" target="_blank" rel="noreferrer">Enviar inscripción por WhatsApp</a>
+      <button type="button" class="btn line" id="cp">Copiar mensaje</button>
+    </form>
+  </section>
+
+  <section class="card qr">
+    <h2 style="margin:0">Pague su adelanto con QR</h2>
+    <div class="amount" id="amt">S/75</div>
+    <div class="tile"><img alt="Código QR de pago de ESSTRADA Co." src="data:image/png;base64,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" width="849" height="862"></div>
+    <p class="note" style="margin:0">Escanee con su app de pagos y confirme el monto.</p>
+  </section>
+
+  <section>
+    <h2>Cómo es el proceso</h2>
+    <ol class="steps">
+      <li><div><b>Complete el formulario</b><div class="note">Se abre WhatsApp con sus datos. Toque enviar.</div></div></li>
+      <li><div><b>Pague el adelanto con el QR</b><div class="note">Pague el monto de su paquete.</div></div></li>
+      <li><div><b>Envíe la captura del pago al mismo chat</b><div class="note">Con eso confirmamos y le pedimos fotos y precios de su negocio.</div></div></li>
+      <li><div><b>Reciba su página en 24 horas</b><div class="note">Revise, pague el saldo y listo.</div></div></li>
+    </ol>
+  </section>
+
+  <footer>ESSTRADA Co. · Pichari, VRAEM · Consultas al <span id="num"></span></footer>
+</div>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+(function(){
+/* Número que recibe las inscripciones: cámbielo aquí si hace falta. Formato 51 + 9 dígitos. */
+var WA="51963845681";
+var PAQ={express:{n:"Express",p:150},pro:{n:"Pro",p:250}};
+var paq="express";
+var $=function(i){return document.getElementById(i);};
+$("num").textContent=WA.slice(2).replace(/(\d{3})(\d{3})(\d{3})/,"$1 $2 $3");
+
+function msg(){
+  var p=PAQ[paq], ad=p.p/2;
+  return ["Hola, quiero inscribirme al paquete "+p.n+" (S/"+p.p+").",
+    "Nombre: "+$("f-n").value.trim(),
+    "Negocio: "+$("f-b").value.trim(),
+    "Rubro: "+$("f-r").value,
+    "Zona: "+$("f-z").value,
+    "Mi WhatsApp: "+$("f-w").value.trim(),
+    "Voy a pagar el adelanto de S/"+ad+" por QR y le envío la captura."].join("\n");
+}
+function link(){return "https://wa.me/"+WA+"?text="+encodeURIComponent(msg());}
+function refresh(){
+  $("go").href=link();
+  $("amt").textContent="S/"+(PAQ[paq].p/2);
+  document.querySelectorAll(".pk").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.p===paq));});
+}
+function valid(){
+  var bad=[];
+  var n=$("f-n").value.trim(), b=$("f-b").value.trim(), w=$("f-w").value.replace(/\D/g,"");
+  $("f-n").setAttribute("aria-invalid",String(!n)); if(!n)bad.push("su nombre");
+  $("f-b").setAttribute("aria-invalid",String(!b)); if(!b)bad.push("el nombre de su negocio");
+  var okw=w.length===9||(w.length===11&&w.indexOf("51")===0);
+  $("f-w").setAttribute("aria-invalid",String(!okw)); if(!okw)bad.push("su WhatsApp de 9 dígitos");
+  $("err").textContent=bad.length?"Falta completar: "+bad.join(", ")+".":"";
+  return !bad.length;
+}
+function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){el.hidden=true;},1800);}
+
+document.querySelectorAll(".pk").forEach(function(b){b.addEventListener("click",function(){paq=b.dataset.p;refresh();});});
+["f-n","f-b","f-r","f-z","f-w"].forEach(function(i){$(i).addEventListener("input",refresh);$(i).addEventListener("change",refresh);});
+$("go").addEventListener("click",function(e){if(!valid()){e.preventDefault();return;}refresh();});
+$("f").addEventListener("submit",function(e){e.preventDefault();});
+$("cp").addEventListener("click",function(){
+  if(!valid())return;
+  var t=msg();
+  function fb(){toast("No se pudo copiar. Use el botón verde.");}
+  try{navigator.clipboard.writeText(t).then(function(){toast("Mensaje copiado");},fb);}catch(e){fb();}
+});
+refresh();
+})();
+</script>
+</body>
+</html>
