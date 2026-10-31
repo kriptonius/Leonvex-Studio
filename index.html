@@ -1139,13 +1139,23 @@
   } catch (e) { console.warn('share init', e); }
 
   // ====== RADIOS ======
+  // Radio-Browser tiene varios servidores; si uno está caído, usa el que responda primero
+  const RB_MIRRORS = ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info', 'https://fi1.api.radio-browser.info', 'https://all.api.radio-browser.info'];
+  async function rbFetch(path) {
+    const one = async (base) => {
+      const c = new AbortController(); const t = setTimeout(() => c.abort(), 7000);
+      try { const r = await fetch(base + path, { signal: c.signal }); if (!r.ok) throw new Error('http ' + r.status); return await r.json(); }
+      finally { clearTimeout(t); }
+    };
+    if (Promise.any) return Promise.any(RB_MIRRORS.map(one));
+    let lastErr; for (const b of RB_MIRRORS) { try { return await one(b); } catch (e) { lastErr = e; } } throw lastErr;
+  }
   async function loadPeruRadios() {
     try {
-      const res = await fetch('https://de1.api.radio-browser.info/json/stations/bycountry/Peru');
-      const data = await res.json();
-      allPeruRadios = data.filter(r => r.url_resolved && r.name).sort((a, b) => (b.clickcount || 0) - (a.clickcount || 0)).slice(0, 100);
+      const data = await rbFetch('/json/stations/bycountry/Peru?hidebroken=true&limit=400');
+      allPeruRadios = data.filter(r => r.url_resolved && r.name && !r.hls).sort((a, b) => (b.clickcount || 0) - (a.clickcount || 0)).slice(0, 100);
       renderRadioList();
-    } catch (e) { radioListContent.innerHTML = '<div class="empty-state">ERROR AL CARGAR</div>'; }
+    } catch (e) { radioListContent.innerHTML = '<div class="empty-state">ERROR AL CARGAR<br><br>Revisa tu conexión</div>'; }
   }
   function renderRadioList() {
     radioListContent.innerHTML = '';
@@ -1156,23 +1166,54 @@
       item.querySelector('.list-item-sub').textContent = radio.tags || 'VARIADO';
       item.addEventListener('click', () => {
         currentSource = 'radio'; hideVideoPlayer(); ytLink.classList.remove('show');
-        audio.src = radio.url_resolved; nowTitle.textContent = radio.name.toUpperCase(); nowGenre.textContent = radio.tags || 'VARIADO';
-        startAudio('radio'); closePanel();
+        nowTitle.textContent = radio.name.toUpperCase(); nowGenre.textContent = radio.tags || 'VARIADO';
+        playRadioQueue(buildRadioUrls([radio]), null); closePanel();
       });
       radioListContent.appendChild(item);
     });
   }
 
-  async function findRadioUrl(searchName) {
-    if (radioCache[searchName]) return radioCache[searchName];
-    try {
-      const res = await fetch(`https://de1.api.radio-browser.info/json/stations/byname/${encodeURIComponent(searchName)}`);
-      const data = await res.json();
-      const peru = data.filter(s => s.countrycode === 'PE' && s.url_resolved && s.name.toLowerCase().includes(searchName.toLowerCase()));
-      const best = (peru.length > 0 ? peru : data.filter(s => s.url_resolved && s.name.toLowerCase().includes(searchName.toLowerCase()))).sort((a, b) => (b.clickcount || 0) - (a.clickcount || 0))[0];
-      if (best) { radioCache[searchName] = best.url_resolved; return best.url_resolved; }
-      return null;
-    } catch (e) { return null; }
+  function buildRadioUrls(list) {
+    const secure = location.protocol === 'https:';
+    const out = [];
+    const add = (u) => { if (u && /^https?:/i.test(u) && !out.includes(u)) out.push(u); };
+    // primero las que ya son https; luego las http convertidas a https (muchos servidores lo aceptan); al final las http originales
+    list.forEach(st => { [st.url_resolved, st.url].forEach(u => { if (u && u.startsWith('https:')) add(u); }); });
+    list.forEach(st => { [st.url_resolved, st.url].forEach(u => { if (u && u.startsWith('http:') && secure) add(u.replace(/^http:/, 'https:')); }); });
+    if (!secure) list.forEach(st => { [st.url_resolved, st.url].forEach(u => { if (u && u.startsWith('http:')) add(u); }); });
+    return out.slice(0, 8);
+  }
+  async function findRadioUrls(searchName) {
+    if (radioCache[searchName] && radioCache[searchName].length) return radioCache[searchName];
+    const data = await rbFetch('/json/stations/byname/' + encodeURIComponent(searchName) + '?hidebroken=true&limit=60');
+    const q = searchName.toLowerCase();
+    let list = data.filter(st => st.url_resolved && st.name && st.name.toLowerCase().includes(q) && !st.hls);
+    const peru = list.filter(st => st.countrycode === 'PE'); if (peru.length) list = peru;
+    list.sort((a, b) => ((b.lastcheckok | 0) - (a.lastcheckok | 0)) || ((b.clickcount || 0) - (a.clickcount || 0)));
+    let urls = buildRadioUrls(list);
+    try { const good = localStorage.getItem('lv_radio_ok_' + searchName); if (good) urls = [good].concat(urls.filter(u => u !== good)); } catch (e) {}
+    if (urls.length) radioCache[searchName] = urls;
+    return urls;
+  }
+
+  // Prueba una lista de señales: si una falla o no arranca en 8 s, pasa a la siguiente
+  let radioQueue = [], radioQi = 0, radioTimer = null, radioSeq = 0, radioActive = false, radioMemKey = null, radioFailed = false, radioAttempt = 0;
+  // Un intento puede fallar por 'error' Y por el rechazo de play(): solo cuenta una vez
+  function failRadioAttempt(seq) { if (seq !== radioSeq || radioFailed) return; radioFailed = true; tryNextRadio(seq); }
+  function playRadioQueue(urls, memKey) {
+    radioSeq++; clearTimeout(radioTimer);
+    radioQueue = urls || []; radioQi = 0; radioMemKey = memKey; radioActive = true;
+    tryNextRadio(radioSeq);
+  }
+  function tryNextRadio(seq) {
+    if (seq !== radioSeq || currentSource !== 'radio') return;
+    clearTimeout(radioTimer); radioFailed = false;
+    if (radioQi >= radioQueue.length) { radioActive = false; setError(); return; }
+    const url = radioQueue[radioQi++];
+    liveBadge.textContent = 'CONECTANDO ' + radioQi + '/' + radioQueue.length; liveBadge.className = 'live-badge loading';
+    const att = ++radioAttempt;
+    audio.src = url; startAudio('radio', att);
+    radioTimer = setTimeout(() => failRadioAttempt(seq), 8000);
   }
 
   function showNotification(msg) { uploadNotification.textContent = `✓ ${msg}`; uploadNotification.classList.add('show'); setTimeout(() => uploadNotification.classList.remove('show'), 3000); }
@@ -1190,22 +1231,28 @@
 
   async function loadRadio(index, autoplay = false) {
     currentIndex = (index + radios.length) % radios.length;
-    const radio = radios[currentIndex];
+    const radio = radios[currentIndex], my = currentIndex;
     nowTitle.textContent = radio.name; nowGenre.textContent = radio.genre; currentSource = 'radio'; hideVideoPlayer(); ytLink.classList.remove('show'); renderRadioGrid();
     if (autoplay) {
-      setSearching(); const url = await findRadioUrl(radio.searchName);
-      if (url) { audio.src = url; startAudio('radio'); } else { setError(); }
+      radioSeq++; clearTimeout(radioTimer); audio.pause();
+      setSearching();
+      let urls = [];
+      try { urls = await findRadioUrls(radio.searchName); } catch (e) { urls = []; }
+      if (my !== currentIndex || currentSource !== 'radio') return;   // el usuario ya cambió de emisora
+      if (urls.length) playRadioQueue(urls, radio.searchName); else setError();
     }
   }
-
-  // Reproduce lo que haya en <audio>
-  function startAudio(kind) {
+  function startAudio(kind, att) {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     setLoading(true);
     const p = audio.play();
     if (p && p.then) {
       p.then(() => { isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setLoading(false); })
-       .catch((err) => { if (err && err.name === 'AbortError') return; isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; setError(); });
+       .catch((err) => {
+         if (err && err.name === 'AbortError') return;
+         isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+         if (kind === 'radio' && radioActive && !(err && err.name === 'NotAllowedError')) { if (att === radioAttempt) failRadioAttempt(radioSeq); return; }
+         setError(); });
     }
   }
   function play() {
@@ -1245,9 +1292,9 @@
 
   volumeSlider.addEventListener('input', (e) => { const v = e.target.value; audio.volume = v; videoElement.volume = v; volumeLabel.textContent = Math.round(v * 100) + '%'; });
   audio.volume = 0.7; videoElement.volume = 0.7;
-  audio.addEventListener('error', () => { if (audio.getAttribute('src')) setError(); });
+  audio.addEventListener('error', () => { if (!audio.getAttribute('src')) return; if (currentSource === 'radio' && radioActive) { failRadioAttempt(radioSeq); return; } setError(); });
   audio.addEventListener('waiting', () => { if (isPlaying) setLoading(true); });
-  audio.addEventListener('playing', () => { isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
+  audio.addEventListener('playing', () => { if (currentSource === 'radio' && radioActive) { clearTimeout(radioTimer); radioActive = false; if (radioMemKey) { try { localStorage.setItem('lv_radio_ok_' + radioMemKey, audio.getAttribute('src')); } catch (e) {} } } isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
 
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.add('show'); });
   installBtn.addEventListener('click', async () => {
@@ -1256,7 +1303,7 @@
     if (outcome === 'accepted') installBtn.classList.remove('show'); deferredPrompt = null;
   });
 
-  async function preloadRadios() { for (const radio of radios) await findRadioUrl(radio.searchName); }
+  async function preloadRadios() { for (const radio of radios) { try { await findRadioUrls(radio.searchName); } catch (e) {} } }
   try { renderRadioGrid(); } catch (e) { console.error(e); }
   try { renderTvGrid(); } catch (e) { console.error(e); }
   try { loadRadio(0); } catch (e) { console.error(e); }
