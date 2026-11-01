@@ -953,13 +953,16 @@
   ];
   let _seq = 0, _hls = null, _timer = null, tvIndex = -1, tvExtraIndex = -1;
 
+  // El reproductor HLS se sirve desde tu mismo sitio (hls.min.js); si faltara, usa la copia de internet
+  let _hlsPromise = null;
   function loadHls() {
-    return new Promise((ok, no) => {
-      if (window.Hls) return ok();
-      const sc = document.createElement('script');
-      sc.src = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js';
-      sc.onload = ok; sc.onerror = no; document.head.appendChild(sc);
+    if (window.Hls) return Promise.resolve();
+    if (_hlsPromise) return _hlsPromise;
+    const load = (src) => new Promise((ok, no) => {
+      const sc = document.createElement('script'); sc.src = src; sc.onload = ok; sc.onerror = () => { sc.remove(); no(new Error('no carga ' + src)); }; document.head.appendChild(sc);
     });
+    _hlsPromise = load('hls.min.js').catch(() => load('https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js')).catch((e) => { _hlsPromise = null; throw e; });
+    return _hlsPromise;
   }
   // Precarga: baja el reproductor HLS y abre conexión con los servidores de TV ANTES de que toques un canal
   window.addEventListener('load', () => setTimeout(() => {
@@ -980,46 +983,69 @@
     let urls = location.protocol === 'https:' ? ch.urls.filter(u => u.startsWith('https')) : ch.urls.slice();
     const memKey = 'lv_tv_ok_' + ch.name;
     try { const good = localStorage.getItem(memKey); if (good && urls.includes(good)) urls = [good].concat(urls.filter(u => u !== good)); } catch (e) {}
-    let i = 0, round = 0, stallTimer = null, recovered = false;
-    const START_TIMEOUT = 7000, STALL_TIMEOUT = 8000;
+    // Ajustes pensados para datos móviles inestables: más colchón de video, más paciencia, y reconexión automática
+    const START_TIMEOUT = 10000, STALL_TIMEOUT = 20000, MAX_CYCLES = 6, CYCLE_PAUSE = 3000;
+    let i = 0, cycles = 0, stallTimer = null, netRetries = 0, mediaRecovers = 0, started = false;
     const clearAll = () => { clearTimeout(_timer); clearTimeout(stallTimer); };
+    const teardown = () => { if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; } clearAll(); netRetries = 0; mediaRecovers = 0; started = false; };
+    let wantHD = false; try { wantHD = localStorage.getItem('lv_tv_hd') === '1'; } catch (e) {}
 
     const next = () => {
       if (seq !== _seq) return;
-      if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; }
-      clearAll(); recovered = false;
+      teardown();
       if (i >= urls.length) {
-        // Da una segunda vuelta completa antes de rendirse
-        if (round < 1 && urls.length > 0) { round++; i = 0; }
-        else { status('Sin señal ahora mismo', true); return; }
+        // Terminó una vuelta por todas las señales: espera y reintenta (hasta MAX_CYCLES vueltas)
+        if (!urls.length || ++cycles >= MAX_CYCLES) { status('Sin señal ahora mismo', true); return; }
+        i = 0; status('Reconectando… (' + cycles + '/' + (MAX_CYCLES - 1) + ')');
+        _timer = setTimeout(() => { if (seq === _seq) attempt(); }, CYCLE_PAUSE);
+        return;
       }
+      attempt();
+    };
+
+    const attempt = () => {
       const url = urls[i++];
       status('Conectando… ' + i + '/' + urls.length);
       _timer = setTimeout(next, START_TIMEOUT);
 
-      // Si se queda "girando" (buffering) más de 8 s, salta a la siguiente señal
+      // Si se queda cargando 20 s seguidos, recién ahí cambia de señal (antes era 8 s y cortaba de más)
       const armStall = () => { clearTimeout(stallTimer); stallTimer = setTimeout(() => { if (seq === _seq) { status('Señal lenta, probando otra…'); next(); } }, STALL_TIMEOUT); };
       const disarmStall = () => clearTimeout(stallTimer);
-      video.onplaying = () => { if (seq === _seq) { clearTimeout(_timer); disarmStall(); status('En vivo'); try { localStorage.setItem(memKey, url); } catch (e) {} } };
-      video.onwaiting = () => { if (seq === _seq && video.readyState < 3) armStall(); };
+      video.onplaying = () => { if (seq !== _seq) return; clearTimeout(_timer); disarmStall(); started = true; cycles = 0; status('En vivo'); try { localStorage.setItem(memKey, url); } catch (e) {} };
+      video.onwaiting = () => { if (seq === _seq && started && video.readyState < 3) armStall(); };
       video.onstalled = video.onwaiting;
       video.ontimeupdate = () => { if (seq === _seq && !video.paused) disarmStall(); };
-      video.onerror = next;
+      video.onerror = () => { if (!started) next(); };   // una vez en marcha, deja que hls.js se recupere solo
 
       loadHls().then(() => true, () => false).then(ok => {
         if (seq !== _seq) return;
         if (ok && window.Hls && Hls.isSupported()) {
           _hls = new Hls({
-            lowLatencyMode: false, maxBufferLength: 20, backBufferLength: 10, liveSyncDurationCount: 3,
+            lowLatencyMode: false,
+            maxBufferLength: 30, maxMaxBufferLength: 60, backBufferLength: 20,
+            liveSyncDurationCount: 5, liveMaxLatencyDurationCount: 14,
+            maxBufferHole: 0.6, nudgeMaxRetry: 8,
             startLevel: 0, testBandwidth: false, startFragPrefetch: true, capLevelToPlayerSize: true,
-            abrEwmaDefaultEstimate: 1500000,
-            manifestLoadingTimeOut: 8000, manifestLoadingMaxRetry: 1,
-            levelLoadingTimeOut: 8000, levelLoadingMaxRetry: 1,
-            fragLoadingTimeOut: 12000, fragLoadingMaxRetry: 2
+            abrEwmaDefaultEstimate: 1000000, abrBandWidthFactor: 0.8, abrBandWidthUpFactor: 0.5,
+            manifestLoadingTimeOut: 10000, manifestLoadingMaxRetry: 1,
+            levelLoadingTimeOut: 10000, levelLoadingMaxRetry: 3, levelLoadingRetryDelay: 1000,
+            fragLoadingTimeOut: 15000, fragLoadingMaxRetry: 4, fragLoadingRetryDelay: 1000
+          });
+          // En datos móviles, limita la calidad a 480p (se ve bien en celular y se corta mucho menos)
+          _hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            try { const lv = _hls.levels || []; if (!wantHD && lv.length > 1) { let cap = 0; lv.forEach((l, k) => { if ((l.height || 0) <= 480) cap = k; }); _hls.autoLevelCapping = cap; } } catch (e) {}
           });
           _hls.on(Hls.Events.ERROR, (e, d) => {
-            if (!d.fatal) return;
-            if (d.type === Hls.ErrorTypes.MEDIA_ERROR && !recovered) { recovered = true; try { _hls.recoverMediaError(); return; } catch (x) {} }
+            if (!d.fatal || !_hls) return;
+            if (!started) { next(); return; }                      // esta señal nunca arrancó: pasa a la siguiente
+            if (d.type === Hls.ErrorTypes.NETWORK_ERROR && netRetries < 4) {   // se cortó la red un momento: reintenta sin cambiar de señal
+              netRetries++; status('Reconectando señal…');
+              setTimeout(() => { if (seq === _seq && _hls) { try { _hls.startLoad(); } catch (x) {} } }, 1200 * netRetries);
+              return;
+            }
+            if (d.type === Hls.ErrorTypes.MEDIA_ERROR && mediaRecovers < 3) {
+              mediaRecovers++; try { if (mediaRecovers === 2) _hls.swapAudioCodec(); _hls.recoverMediaError(); return; } catch (x) {}
+            }
             next();
           });
           _hls.loadSource(url); _hls.attachMedia(video); video.play().catch(() => {});
