@@ -252,6 +252,18 @@
   .radio-studio92 .radio-icon { background: linear-gradient(135deg, #b4ff39, #d4ff7f); }
   .radio-moda .radio-icon { background: linear-gradient(135deg, #ff2d78, #ff9500); }
   .radio-lazona .radio-icon { background: linear-gradient(135deg, #00f0ff, #b14aed); }
+  .radio-fantoms .radio-icon { background: linear-gradient(135deg, #b4ff39, #00f0ff); color: #05060a; }
+  .radio-card.free { opacity: 0.4; border-style: dashed; }
+  .radio-card.free .radio-icon { background: rgba(255,255,255,0.06); color: var(--text-dim); font-size: 20px; }
+  .boot-mini { display: none; position: absolute; top: 44%; left: 50%; transform: translate(-50%, -50%); z-index: 12; width: 150px; padding: 8px 12px 9px; border-radius: 12px; background: rgba(5,6,10,0.55); border: 1px solid rgba(0,240,255,0.18); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: opacity 0.5s ease; pointer-events: none; }
+  .boot-mini.show { display: block; }
+  .boot-mini.fade { opacity: 0; }
+  .boot-mini-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+  .boot-msg { font-family: 'Orbitron', sans-serif; font-size: 8px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; white-space: nowrap; }
+  .boot-msg.blocked { color: var(--neon-lime); animation: pulse 1.4s infinite; }
+  .boot-pct { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 11px; color: var(--neon-cyan); }
+  .boot-bar { height: 2px; border-radius: 2px; background: rgba(255,255,255,0.1); overflow: hidden; }
+  .boot-bar > div { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan)); transition: width 0.15s linear; }
   .radio-ritmo .radio-icon { background: linear-gradient(135deg, #ff6b9d, #b14aed); }
 
   /* PANEL: ahora es una ventana fija a pantalla (antes quedaba atrapado en 280px) */
@@ -500,6 +512,7 @@
 
     <div class="visualizer-wrap" id="visualizerWrap">
       <canvas id="visualizer"></canvas>
+      <div class="boot-mini show" id="boot"><div class="boot-mini-top"><span class="boot-msg" id="bootMsg">Sintonizando…</span><b class="boot-pct" id="bootPct">0%</b></div><div class="boot-bar"><div id="bootFill"></div></div></div>
       <div class="video-player" id="videoPlayer">
         <video id="videoElement" playsinline controls></video>
         <button class="video-close-btn" id="videoCloseBtn">
@@ -626,7 +639,15 @@
     { id: 'studio92', name: 'STUDIO 92', genre: 'Pop', color: '#b4ff39', searchName: 'Studio 92' },
     { id: 'moda', name: 'MODA', genre: 'Pop Int.', color: '#ff2d78', searchName: 'Radio Moda' },
     { id: 'lazona', name: 'LA ZONA', genre: 'Rock', color: '#00f0ff', searchName: 'La Zona' },
-    { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica', alts: ['Ritmo Romántica', 'Radio Ritmo', 'Ritmo'] }
+    { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica', alts: ['Ritmo Romántica', 'Radio Ritmo', 'Ritmo'] },
+    // ---- Tercera fila ----
+    // Radio propia: suena sola al abrir la app. Si el servidor no es https, se prueba también por el túnel /fantoms-stream (archivo _redirects)
+    { id: 'fantoms', name: 'FANTOMS', genre: 'Radio en vivo', color: '#b4ff39', streams: ['http://157.245.247.5:8000/stream'], proxy: '/fantoms-stream' },
+    // Botones LIBRES para radios futuras. Para activar uno, cambia la línea así:
+    // { id: 'miradio', name: 'MI RADIO', genre: 'Género', color: '#ff2d78', streams: ['https://servidor/stream'] }
+    { id: 'libre1', name: 'LIBRE', genre: '', color: '#7a83a8', free: true },
+    { id: 'libre2', name: 'LIBRE', genre: '', color: '#7a83a8', free: true },
+    { id: 'libre3', name: 'LIBRE', genre: '', color: '#7a83a8', free: true }
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -747,8 +768,8 @@
     radioGrid.innerHTML = '';
     radios.forEach((radio, i) => {
       const card = document.createElement('div');
-      card.className = `radio-card radio-${radio.id}${(i === currentIndex && currentSource === 'radio') ? ' active' : ''}`;
-      card.innerHTML = `<div class="radio-icon">${radio.name.charAt(0)}</div><div class="radio-name">${radio.name}</div>`;
+      card.className = `radio-card radio-${radio.id}${radio.free ? ' free' : ''}${(i === currentIndex && currentSource === 'radio') ? ' active' : ''}`;
+      card.innerHTML = `<div class="radio-icon">${radio.free ? '+' : radio.name.charAt(0)}</div><div class="radio-name">${radio.name}</div>`;
       card.addEventListener('click', () => loadRadio(i, true));
       radioGrid.appendChild(card);
     });
@@ -1176,6 +1197,44 @@
     })();
   } catch (e) { console.warn('share init', e); }
 
+  // ====== ARRANQUE: la radio FANTOMS suena sola, con carga progresiva discreta (0 → 99 %) ======
+  const FANTOMS_INDEX = radios.findIndex(r => r.id === 'fantoms');
+  const BOOT_MS = 5000;
+  let bootActive = false, bootPct = 0, bootTimer = null, bootState = 'idle', bootStartAt = 0, streamRetries = 0;
+  function bootSet(p, msg, cls) {
+    bootPct = p; $('bootPct').textContent = p + '%'; $('bootFill').style.width = p + '%';
+    if (msg != null) { const m = $('bootMsg'); m.textContent = msg; m.className = 'boot-msg' + (cls ? ' ' + cls : ''); }
+  }
+  function bootHide(delay) { setTimeout(() => { const el = $('boot'); el.classList.add('fade'); setTimeout(() => { el.classList.remove('show'); el.style.display = 'none'; }, 550); }, delay || 0); }
+  function bootConnect() { bootState = 'connecting'; clearInterval(bootTimer); bootSet(99, 'Conectando…'); loadRadio(FANTOMS_INDEX, true); }
+  function bootCancel() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootHide(0); if (!isPlaying) { liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; } }
+  function bootBlocked() { bootState = 'blocked'; bootSet(99, 'Toca para escuchar', 'blocked'); }
+  function bootDone() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootSet(100, 'En vivo'); bootHide(700); }
+  function bootFail() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootSet(bootPct, 'Sin conexión'); bootHide(2200); }
+  // El primer toque en cualquier parte vacía de la pantalla es el permiso para sonar. Si toca un botón, se respeta lo que eligió.
+  function bootFirstTouch(e) {
+    if (!bootActive) { document.removeEventListener('pointerup', bootFirstTouch, true); return; }
+    if (bootState === 'connecting') return;
+    document.removeEventListener('pointerup', bootFirstTouch, true);
+    const t = e.target;
+    if (t && t.closest && t.closest('button, a, input, .radio-card, .tv-card, .list-item, .ad-zone, .main-panel, .qr-modal, .share-modal, .action-btn')) { bootCancel(); return; }
+    bootConnect();
+  }
+  function startBoot() {
+    const el = $('boot');
+    if (!el || FANTOMS_INDEX < 0) { if (el) el.style.display = 'none'; return; }
+    bootActive = true; bootStartAt = Date.now(); bootSet(0, 'Sintonizando…');
+    liveBadge.textContent = 'SINTONIZANDO...'; liveBadge.className = 'live-badge loading';
+    document.addEventListener('pointerup', bootFirstTouch, true);
+    bootTimer = setInterval(() => {
+      const t = Math.min(1, (Date.now() - bootStartAt) / BOOT_MS);
+      const p = Math.min(99, Math.floor(99 * (1 - Math.pow(1 - t, 3))));
+      if (p > bootPct) bootSet(p, p < 40 ? 'Sintonizando…' : p < 80 ? 'Cargando radio…' : 'Casi listo…');
+      if (t >= 1 && bootState === 'idle') bootConnect();
+    }, 90);
+    setTimeout(() => { if (bootActive) bootCancel(); }, 40000);   // tope de seguridad
+  }
+
   // ====== RADIOS ======
   // Radio-Browser tiene varios servidores; si uno está caído, usa el que responda primero
   const RB_MIRRORS = ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info', 'https://fi1.api.radio-browser.info', 'https://all.api.radio-browser.info'];
@@ -1285,15 +1344,29 @@
     else if (currentSource === 'search') { liveBadge.textContent = '♪ ONLINE'; liveBadge.className = 'live-badge searching'; }
   }
   function setSearching() { liveBadge.textContent = 'BUSCANDO...'; liveBadge.className = 'live-badge searching'; }
-  function setError() { liveBadge.textContent = 'OFFLINE'; liveBadge.className = 'live-badge error'; }
+  function setError() { liveBadge.textContent = 'OFFLINE'; liveBadge.className = 'live-badge error'; try { bootFail(); } catch (e) {} }
 
+  function directUrls(radio) {
+    const secure = location.protocol === 'https:'; const out = [];
+    const add = (u) => { if (u && !out.includes(u)) out.push(u); };
+    (radio.streams || []).forEach(u => {
+      if (!/^http:/i.test(u) || !secure) { add(u); return; }
+      if (radio.proxy) add(radio.proxy);              // 1) túnel de tu mismo sitio (https)
+      add(u.replace(/^http:/i, 'https:'));            // 2) misma dirección con https
+      add(u);                                         // 3) original (solo funciona si la página no es https)
+    });
+    return out;
+  }
+  function nextRadioIndex(from, dir) { let i = from; for (let k = 0; k < radios.length; k++) { i = (i + dir + radios.length) % radios.length; if (!radios[i].free) return i; } return from; }
   async function loadRadio(index, autoplay = false) {
+    if (radios[(index + radios.length) % radios.length].free) { showNotification('BOTÓN LIBRE'); return; }
     currentIndex = (index + radios.length) % radios.length;
     const radio = radios[currentIndex], my = currentIndex;
     nowTitle.textContent = radio.name; nowGenre.textContent = radio.genre; currentSource = 'radio'; hideVideoPlayer(); ytLink.classList.remove('show'); renderRadioGrid();
     if (autoplay) {
       radioSeq++; clearTimeout(radioTimer); audio.pause();
       setSearching();
+      if (radio.streams) { playRadioQueue(directUrls(radio), null); return; }
       let urls = [];
       try { urls = await findRadioUrls(radio.searchName, radio.alts); } catch (e) { urls = []; }
       if (my !== currentIndex || currentSource !== 'radio') return;   // el usuario ya cambió de emisora
@@ -1308,6 +1381,7 @@
       p.then(() => { isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setLoading(false); })
        .catch((err) => {
          if (err && err.name === 'AbortError') return;
+         if (err && err.name === 'NotAllowedError' && bootActive) { clearTimeout(radioTimer); radioActive = false; bootBlocked(); return; }
          isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
          if (kind === 'radio' && radioActive && !(err && err.name === 'NotAllowedError')) { if (att === radioAttempt) failRadioAttempt(radioSeq); return; }
          setError(); });
@@ -1330,7 +1404,7 @@
   });
 
   function step(dir) {
-    if (currentSource === 'radio') loadRadio(currentIndex + dir, true);
+    if (currentSource === 'radio') loadRadio(nextRadioIndex(currentIndex, dir), true);
     else if (currentSource === 'local') playLocal(trackIndex + dir);
     else if (currentSource === 'search') playSearch(trackIndex + dir);
     else if (currentSource === 'video') playVideoLocal(trackIndex + dir);
@@ -1350,9 +1424,16 @@
 
   volumeSlider.addEventListener('input', (e) => { const v = e.target.value; audio.volume = v; videoElement.volume = v; volumeLabel.textContent = Math.round(v * 100) + '%'; });
   audio.volume = 0.7; videoElement.volume = 0.7;
-  audio.addEventListener('error', () => { if (!audio.getAttribute('src')) return; if (currentSource === 'radio' && radioActive) { failRadioAttempt(radioSeq); return; } setError(); });
+  audio.addEventListener('error', () => {
+    if (!audio.getAttribute('src')) return;
+    if (currentSource === 'radio' && radioActive) { failRadioAttempt(radioSeq); return; }
+    // radio propia que se cortó en pleno sonido: reconecta sola
+    if (currentSource === 'radio' && radios[currentIndex] && radios[currentIndex].streams && streamRetries < 6) { streamRetries++; const my = currentIndex; setTimeout(() => { if (currentSource === 'radio' && currentIndex === my) loadRadio(my, true); }, 2500); return; }
+    setError();
+  });
+  audio.addEventListener('ended', () => { if (currentSource === 'radio' && radios[currentIndex] && radios[currentIndex].streams) { const my = currentIndex; setTimeout(() => { if (currentSource === 'radio' && currentIndex === my) loadRadio(my, true); }, 1000); } });
   audio.addEventListener('waiting', () => { if (isPlaying) setLoading(true); });
-  audio.addEventListener('playing', () => { if (currentSource === 'radio' && radioActive) { clearTimeout(radioTimer); radioActive = false; if (radioMemKey) { try { localStorage.setItem('lv_radio_ok_' + radioMemKey, audio.getAttribute('src')); } catch (e) {} } } isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
+  audio.addEventListener('playing', () => { if (currentSource === 'radio') { try { bootDone(); } catch (e) {} streamRetries = 0; } if (currentSource === 'radio' && radioActive) { clearTimeout(radioTimer); radioActive = false; if (radioMemKey) { try { localStorage.setItem('lv_radio_ok_' + radioMemKey, audio.getAttribute('src')); } catch (e) {} } } isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
 
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.add('show'); });
   installBtn.addEventListener('click', async () => {
@@ -1361,10 +1442,11 @@
     if (outcome === 'accepted') installBtn.classList.remove('show'); deferredPrompt = null;
   });
 
-  async function preloadRadios() { for (const radio of radios) { try { await findRadioUrls(radio.searchName, radio.alts); } catch (e) {} } }
+  async function preloadRadios() { for (const radio of radios) { if (!radio.searchName) continue; try { await findRadioUrls(radio.searchName, radio.alts); } catch (e) {} } }
   try { renderRadioGrid(); } catch (e) { console.error(e); }
   try { renderTvGrid(); } catch (e) { console.error(e); }
-  try { loadRadio(0); } catch (e) { console.error(e); }
+  try { loadRadio(FANTOMS_INDEX >= 0 ? FANTOMS_INDEX : 0); } catch (e) { console.error(e); }
+  try { startBoot(); } catch (e) { console.error(e); const b = $('boot'); if (b) b.style.display = 'none'; }
   try { preloadRadios(); } catch (e) { console.error(e); }
 </script>
 </body>
