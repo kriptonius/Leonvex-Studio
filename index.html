@@ -639,14 +639,8 @@
     { id: 'moda', name: 'MODA', genre: 'Pop Int.', color: '#ff2d78', searchName: 'Radio Moda' },
     { id: 'lazona', name: 'LA ZONA', genre: 'Rock', color: '#00f0ff', searchName: 'La Zona' },
     { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica', alts: ['Ritmo Romántica', 'Radio Ritmo', 'Ritmo'] },
-    // ---- Tercera fila ----
-    // Radio propia: suena sola al abrir la app. Si el servidor no es https, se prueba también por el túnel /fantoms-stream (archivo _redirects)
-    { id: 'fantoms', name: 'FANTOMS', genre: 'Radio en vivo', color: '#b4ff39', streams: ['http://157.245.247.5:8000/stream'], proxy: '/fantoms-stream' },
-    // Botones LIBRES para radios futuras. Para activar uno, cambia la línea así:
-    // { id: 'miradio', name: 'MI RADIO', genre: 'Género', color: '#ff2d78', streams: ['https://servidor/stream'] }
-    { id: 'libre1', name: 'LIBRE', genre: '', color: '#7a83a8', free: true },
-    { id: 'libre2', name: 'LIBRE', genre: '', color: '#7a83a8', free: true },
-    { id: 'libre3', name: 'LIBRE', genre: '', color: '#7a83a8', free: true }
+    // FANTOMS: no tiene botón en la grilla; está dentro de OTROS y arranca sola al abrir la app (vía túnel /radio-proxy)
+    { id: 'fantoms', name: 'FANTOMS', genre: 'Radio en vivo', color: '#b4ff39', streams: ['http://157.245.247.5:8000/stream'], proxy: '/fantoms-stream', hidden: true },
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -766,6 +760,7 @@
   function renderRadioGrid() {
     radioGrid.innerHTML = '';
     radios.forEach((radio, i) => {
+      if (radio.hidden) return;
       const card = document.createElement('div');
       card.className = `radio-card radio-${radio.id}${radio.free ? ' free' : ''}${(i === currentIndex && currentSource === 'radio') ? ' active' : ''}`;
       card.innerHTML = `<div class="radio-icon">${radio.free ? '+' : radio.name.charAt(0)}</div><div class="radio-name">${radio.name}</div>`;
@@ -1097,6 +1092,13 @@
   function renderTvOther() {
     const box = $('tvOtherList'); if (!box) return;
     box.innerHTML = '';
+    const fi = radios.findIndex(r => r.id === 'fantoms');
+    if (fi >= 0) {
+      const fr = document.createElement('div'); fr.className = 'list-item';
+      fr.innerHTML = '<div class="list-item-cover">📻</div><div class="list-item-info"><div class="list-item-name">FANTOMS</div><div class="list-item-sub">Radio en vivo • suena sola al abrir la app</div></div>';
+      fr.addEventListener('click', () => { closePanel(); loadRadio(fi, true); });
+      box.appendChild(fr);
+    }
     TV_EXTRA.forEach((ch, k) => {
       const item = document.createElement('div'); item.className = 'list-item';
       item.innerHTML = '<div class="list-item-cover video-cover">📺</div><div class="list-item-info"><div class="list-item-name"></div><div class="list-item-sub"></div></div><div class="list-item-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>';
@@ -1208,7 +1210,7 @@
   function bootHide(delay) { setTimeout(() => { const el = $('boot'); el.classList.add('fade'); setTimeout(() => { el.classList.remove('show'); el.style.display = 'none'; }, 550); }, delay || 0); }
   function bootConnect() { bootState = 'connecting'; clearInterval(bootTimer); bootSet(99, 'Conectando…'); loadRadio(FANTOMS_INDEX, true); }
   function bootCancel() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootHide(0); if (!isPlaying) { liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; } }
-  function bootBlocked() { bootState = 'blocked'; bootSet(99, 'Toca para escuchar', 'blocked'); }
+  function bootBlocked() { bootState = 'blocked'; bootSet(99, 'Toca para escuchar', 'blocked'); liveBadge.textContent = 'TOCA PARA ESCUCHAR'; liveBadge.className = 'live-badge loading'; }
   function bootDone() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootSet(100, 'En vivo'); bootHide(700); }
   function bootFail() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootSet(bootPct, 'Sin conexión'); bootHide(2200); }
   // El primer toque en cualquier parte vacía de la pantalla es el permiso para sonar. Si toca un botón, se respeta lo que eligió.
@@ -1376,7 +1378,7 @@
     });
     return out;
   }
-  function nextRadioIndex(from, dir) { let i = from; for (let k = 0; k < radios.length; k++) { i = (i + dir + radios.length) % radios.length; if (!radios[i].free) return i; } return from; }
+  function nextRadioIndex(from, dir) { let i = from; for (let k = 0; k < radios.length; k++) { i = (i + dir + radios.length) % radios.length; if (!radios[i].free && !radios[i].hidden) return i; } return from; }
   async function loadRadio(index, autoplay = false) {
     if (radios[(index + radios.length) % radios.length].free) { showNotification('BOTÓN LIBRE'); return; }
     currentIndex = (index + radios.length) % radios.length;
