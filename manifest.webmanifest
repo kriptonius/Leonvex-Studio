@@ -1,7 +1,7 @@
 {
   "name": "LeonVex Studio",
   "short_name": "LeonVex",
-  "description": "Radio, TV y música en un solo lugar",
+  "description": "Radio, TV y m\u00fasica en un solo lugar",
   "start_url": "./?launch=fantoms",
   "scope": "./",
   "display": "standalone",
@@ -27,5 +27,6 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "id": "./?launch=fantoms"
 }
