@@ -1195,6 +1195,7 @@
     })();
   } catch (e) { console.warn('share init', e); }
 
+  try { if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){}); } catch (e) {}
   // ====== ARRANQUE: la radio FANTOMS suena sola, con carga progresiva discreta (0 → 99 %) ======
   const FANTOMS_INDEX = radios.findIndex(r => r.id === 'fantoms');
   const BOOT_MS = 5000;
