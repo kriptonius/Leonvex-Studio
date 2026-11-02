@@ -1224,6 +1224,10 @@
     bootActive = true; bootStartAt = Date.now(); bootSet(0, 'Sintonizando…');
     liveBadge.textContent = 'SINTONIZANDO...'; liveBadge.className = 'live-badge loading';
     document.addEventListener('pointerup', bootFirstTouch, true);
+    // Abierta desde el ícono instalado (?launch=fantoms o modo app): conectar YA, como hace Mi Bulla
+    let fromApp = false;
+    try { fromApp = new URLSearchParams(location.search).get('launch') === 'fantoms' || matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) {}
+    if (fromApp) { bootState = 'connecting'; loadRadio(FANTOMS_INDEX, true); }
     bootTimer = setInterval(() => {
       const t = Math.min(1, (Date.now() - bootStartAt) / BOOT_MS);
       const p = Math.min(99, Math.floor(99 * (1 - Math.pow(1 - t, 3))));
