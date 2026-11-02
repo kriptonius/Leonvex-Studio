@@ -640,13 +640,6 @@
     { id: 'lazona', name: 'LA ZONA', genre: 'Rock', color: '#00f0ff', searchName: 'La Zona' },
     { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica', alts: ['Ritmo Romántica', 'Radio Ritmo', 'Ritmo'] },
     // ---- Tercera fila ----
-    // Radio propia: suena sola al abrir la app. Si el servidor no es https, se prueba también por el túnel /fantoms-stream (archivo _redirects)
-    { id: 'fantoms', name: 'FANTOMS', genre: 'Radio en vivo', color: '#b4ff39', streams: ['http://157.245.247.5:8000/stream'], proxy: '/fantoms-stream' },
-    // Botones LIBRES para radios futuras. Para activar uno, cambia la línea así:
-    // { id: 'miradio', name: 'MI RADIO', genre: 'Género', color: '#ff2d78', streams: ['https://servidor/stream'] }
-    { id: 'libre1', name: 'LIBRE', genre: '', color: '#7a83a8', free: true },
-    { id: 'libre2', name: 'LIBRE', genre: '', color: '#7a83a8', free: true },
-    { id: 'libre3', name: 'LIBRE', genre: '', color: '#7a83a8', free: true }
   ];
 
   const $ = (id) => document.getElementById(id);
