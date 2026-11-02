@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,7 +16,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2d78'/%3E%3Cstop offset='0.5' stop-color='%23b14aed'/%3E%3Cstop offset='1' stop-color='%2300f0ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-family='Arial' font-size='50' font-weight='900' fill='white' text-anchor='middle'%3ELV%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
 <style>
-#boot{display:none!important}
+  #boot { display: none !important; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root {
     --neon-pink: #ff2d78; --neon-violet: #b14aed; --neon-cyan: #00f0ff;
@@ -43,14 +44,17 @@
     box-shadow: 0 0 80px rgba(255, 45, 120, 0.15), 0 0 160px rgba(0, 240, 255, 0.08);
   }
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .brand-wrap { display: flex; align-items: center; min-width: 0; }
   .brand {
     font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; letter-spacing: 3px;
     background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
+    -webkit-background-clip: text; background-clip: text; color: transparent; white-space: nowrap;
   }
-  .brand-wrap { display: flex; align-items: center; min-width: 0; }
-  .brand { white-space: nowrap; }
-  .share-mini { background: none; border: none; width: 24px; height: 24px; margin-left: 6px; padding: 0; flex-shrink: 0; color: var(--text-dim); opacity: 0.45; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+  .share-mini {
+    background: none; border: none; width: 24px; height: 24px; margin-left: 6px; padding: 0;
+    flex-shrink: 0; color: var(--text-dim); opacity: 0.45; cursor: pointer; display: inline-flex;
+    align-items: center; justify-content: center; transition: all 0.3s ease;
+  }
   .share-mini:hover, .share-mini:focus { opacity: 1; color: var(--neon-cyan); outline: none; }
   .share-mini svg { width: 16px; height: 16px; }
   .share-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1100; justify-content: center; align-items: center; }
@@ -191,6 +195,7 @@
   .ad-zone.web-slide { border-color: rgba(240,179,35,0.45); background: linear-gradient(135deg, rgba(20,87,63,0.35), rgba(240,179,35,0.06)); }
   .ad-zone.web-slide .ad-zone-title { color: #f0b323; }
   .ad-zone-icon.web-icon { background: linear-gradient(135deg, #14573f, #58c28f); box-shadow: 0 0 12px rgba(88,194,143,0.45); }
+  
   .product-card { display: flex; gap: 12px; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
   .product-img { width: 56px; height: 56px; border-radius: 10px; background: #111; object-fit: cover; flex-shrink: 0; }
   .product-info { flex: 1; min-width: 0; }
@@ -198,6 +203,7 @@
   .product-meta { font-size: 10px; color: var(--text-dim); margin-top: 3px; }
   .product-price { color: var(--neon-lime); font-weight: 600; }
   .product-buy { background: var(--whatsapp-green); color: #fff; border-radius: 10px; padding: 8px 10px; font-size: 10px; font-weight: 700; text-decoration: none; letter-spacing: 1px; white-space: nowrap; }
+  
   .whatsapp-btn-compact {
     width: 56px; height: 56px; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
     border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer;
@@ -247,6 +253,7 @@
     font-size: 16px; margin: 0 auto 6px; color: white;
   }
   .radio-name { font-family: 'Orbitron', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 0.5px; line-height: 1.2; color: var(--text-main); }
+  
   .radio-rpp .radio-icon { background: linear-gradient(135deg, #ff2d78, #ff6b9d); }
   .radio-inolvidable .radio-icon { background: linear-gradient(135deg, #b14aed, #d66bff); }
   .radio-nuevaq .radio-icon { background: linear-gradient(135deg, #ff9500, #ffb84d); }
@@ -254,21 +261,8 @@
   .radio-studio92 .radio-icon { background: linear-gradient(135deg, #b4ff39, #d4ff7f); }
   .radio-moda .radio-icon { background: linear-gradient(135deg, #ff2d78, #ff9500); }
   .radio-lazona .radio-icon { background: linear-gradient(135deg, #00f0ff, #b14aed); }
-  .radio-fantoms .radio-icon { background: linear-gradient(135deg, #b4ff39, #00f0ff); color: #05060a; }
-  .radio-card.free { opacity: 0.4; border-style: dashed; }
-  .radio-card.free .radio-icon { background: rgba(255,255,255,0.06); color: var(--text-dim); font-size: 20px; }
-  .boot-mini { display: none; position: absolute; top: 44%; left: 50%; transform: translate(-50%, -50%); z-index: 12; width: 150px; padding: 8px 12px 9px; border-radius: 12px; background: rgba(5,6,10,0.55); border: 1px solid rgba(0,240,255,0.18); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: opacity 0.5s ease; pointer-events: none; }
-  .boot-mini.show { display: block; }
-  .boot-mini.fade { opacity: 0; }
-  .boot-mini-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 6px; }
-  .boot-msg { font-family: 'Orbitron', sans-serif; font-size: 8px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; white-space: nowrap; }
-  .boot-msg.blocked { color: var(--neon-lime); animation: pulse 1.4s infinite; }
-  .boot-pct { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 11px; color: var(--neon-cyan); }
-  .boot-bar { height: 2px; border-radius: 2px; background: rgba(255,255,255,0.1); overflow: hidden; }
-  .boot-bar > div { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan)); transition: width 0.15s linear; }
   .radio-ritmo .radio-icon { background: linear-gradient(135deg, #ff6b9d, #b14aed); }
 
-  /* PANEL: ahora es una ventana fija a pantalla (antes quedaba atrapado en 280px) */
   .main-panel {
     display: none; position: fixed; top: 4vh; bottom: 4vh; left: 0; right: 0; margin: 0 auto;
     width: min(94vw, 420px); background: rgba(5, 6, 10, 0.98); border-radius: 20px; z-index: 500;
@@ -301,6 +295,7 @@
   .tab-content::-webkit-scrollbar { width: 4px; }
   .tab-content::-webkit-scrollbar-track { background: transparent; }
   .tab-content::-webkit-scrollbar-thumb { background: rgba(177, 74, 237, 0.3); border-radius: 2px; }
+  
   .list-item {
     background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px; padding: 12px 14px; cursor: pointer; transition: all 0.3s ease;
@@ -322,6 +317,7 @@
     display: flex; align-items: center; justify-content: center; flex-shrink: 0; opacity: 1; transition: all 0.3s ease;
   }
   .list-item-play svg { width: 14px; height: 14px; color: white; }
+
   .upload-zone {
     border: 3px dashed var(--neon-cyan); border-radius: 20px; padding: 24px 20px; text-align: center;
     cursor: pointer; transition: all 0.3s ease; margin-bottom: 20px; background: rgba(0, 240, 255, 0.05);
@@ -331,6 +327,7 @@
   .upload-zone-title { font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; color: var(--text-main); }
   .upload-zone-sub { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
   .upload-zone-hint { margin-top: 10px; font-size: 9px; color: var(--neon-lime); letter-spacing: 1px; }
+
   .search-box { display: flex; gap: 8px; margin-bottom: 12px; }
   .search-input {
     flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(177, 74, 237, 0.3);
@@ -353,6 +350,7 @@
   }
   .yt-link.show { display: flex; }
   .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 11px; letter-spacing: 2px; }
+
   .volume-fixed {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
     background: linear-gradient(180deg, transparent 0%, rgba(5, 6, 10, 0.95) 20%, rgba(5, 6, 10, 1) 100%);
@@ -367,6 +365,7 @@
     box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px rgba(0, 240, 255, 0.5); cursor: pointer;
   }
   .volume-label { font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--neon-cyan); letter-spacing: 2px; min-width: 40px; text-align: right; }
+
   .upload-notification {
     position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
     background: linear-gradient(135deg, var(--neon-lime), var(--neon-cyan)); color: var(--bg-dark);
@@ -375,6 +374,7 @@
     white-space: nowrap;
   }
   .upload-notification.show { transform: translateX(-50%) translateY(0); }
+
   .install-btn {
     position: fixed; bottom: 90px; right: 20px; background: linear-gradient(135deg, var(--neon-lime), var(--neon-cyan));
     color: var(--bg-dark); border: none; border-radius: 50%; width: 56px; height: 56px; cursor: pointer;
@@ -446,14 +446,13 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
     </button>
     <div class="qr-modal-title">PAGA CON YAPE O PLIN</div>
-    <!-- 👇 Sube tu imagen del QR de Izipay junto a este index.html con el nombre: qr-pago.jpg -->
     <img src="qr-pago.jpg" alt="QR de Pago Izipay" id="qrModalImage">
-    <div class="qr-error" id="qrError">No se encontró la imagen <b>qr-pago.jpg</b>.<br>Sube tu QR de Izipay a la misma carpeta que este archivo con ese nombre.</div>
+    <div class="qr-error" id="qrError">No se encontró la imagen <b>qr-pago.jpg</b>.<br>Sube tu QR a la misma carpeta.</div>
     <div class="qr-modal-hint">Toca fuera para cerrar</div>
   </div>
 </div>
 
-<!-- PANEL (fuera del contenedor para que ocupe la pantalla) -->
+<!-- PANEL PRINCIPAL -->
 <div class="main-panel" id="mainPanel">
   <div class="panel-header">
     <div class="panel-title" id="panelTitle">EXPLORAR</div>
@@ -497,24 +496,26 @@
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
       </button>
     </div>
-    <div class="search-note">Canciones completas de Jamendo (música libre de artistas independientes). Si no hay resultados, muestra vistas previas de 30 s de iTunes. Al terminar, pasa sola a la siguiente.</div>
+    <div class="search-note">Canciones completas de Jamendo/iTunes. Al terminar una pista, pasa automáticamente a la siguiente.</div>
     <a class="yt-link" id="ytLink" href="#" target="_blank" rel="noopener">▶ ESCUCHAR COMPLETA EN YOUTUBE</a>
-    <div id="searchResults"><div class="empty-state"><div>Busca canciones en internet</div></div></div>
+    <div id="searchResults"><div class="empty-state">Busca canciones en internet</div></div>
   </div>
 </div>
 
 <div class="scroll-container">
   <div class="player-container">
     <div class="header">
-      <div class="brand-wrap"><div class="brand">LEONVEX STUDIO</div>
-        <button class="share-mini" id="shareMiniBtn" title="Compartir / instalar app" aria-label="Compartir app"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2z"/></svg></button>
+      <div class="brand-wrap">
+        <div class="brand">LEONVEX STUDIO</div>
+        <button class="share-mini" id="shareMiniBtn" title="Compartir / instalar app" aria-label="Compartir app">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2z"/></svg>
+        </button>
       </div>
       <div class="status" style="flex-shrink:0">LIVE</div>
     </div>
 
     <div class="visualizer-wrap" id="visualizerWrap">
       <canvas id="visualizer"></canvas>
-      <div class="boot-mini show" id="boot"><div class="boot-mini-top"><span class="boot-msg" id="bootMsg">Sintonizando…</span><b class="boot-pct" id="bootPct">0%</b></div><div class="boot-bar"><div id="bootFill"></div></div></div>
       <div class="video-player" id="videoPlayer">
         <video id="videoElement" playsinline controls></video>
         <button class="video-close-btn" id="videoCloseBtn">
@@ -539,34 +540,34 @@
 
     <div class="promo-zone">
       <div class="ad-carousel" id="adCarousel">
-      <a href="https://dentivrae.floot.app" target="_blank" class="ad-zone show">
-        <div class="ad-zone-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.5 7.8 8.4 8.3 9.2C7.1 10.3 6.5 11.8 6.5 13.5C6.5 15.5 7.8 17.2 9.5 18V21C9.5 21.6 10 22 10.5 22H13.5C14 22 14.5 21.6 14.5 21V18C16.2 17.2 17.5 15.5 17.5 13.5C17.5 11.8 16.9 10.3 15.7 9.2C16.2 8.4 16.5 7.5 16.5 6.5C16.5 4 14.5 2 12 2ZM12 4C13.4 4 14.5 5.1 14.5 6.5C14.5 7.2 14.2 7.8 13.8 8.3L12 10.5L10.2 8.3C9.8 7.8 9.5 7.2 9.5 6.5C9.5 5.1 10.6 4 12 4Z"/>
-          </svg>
+        <a href="https://dentivrae.floot.app" target="_blank" class="ad-zone show">
+          <div class="ad-zone-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 7.5 7.8 8.4 8.3 9.2C7.1 10.3 6.5 11.8 6.5 13.5C6.5 15.5 7.8 17.2 9.5 18V21C9.5 21.6 10 22 10.5 22H13.5C14 22 14.5 21.6 14.5 21V18C16.2 17.2 17.5 15.5 17.5 13.5C17.5 11.8 16.9 10.3 15.7 9.2C16.2 8.4 16.5 7.5 16.5 6.5C16.5 4 14.5 2 12 2ZM12 4C13.4 4 14.5 5.1 14.5 6.5C14.5 7.2 14.2 7.8 13.8 8.3L12 10.5L10.2 8.3C9.8 7.8 9.5 7.2 9.5 6.5C9.5 5.1 10.6 4 12 4Z"/>
+            </svg>
+          </div>
+          <div class="ad-zone-text">
+            <div class="ad-zone-title">NOVADENT</div>
+            <div class="ad-zone-sub">Consultorio Odontológico</div>
+          </div>
+        </a>
+        <div class="ad-zone shop-slide" id="shopSlide" role="button" tabindex="0">
+          <div class="ad-zone-icon shop-icon"><img src="shop-logo.png" alt="Shop LeonVex Studio"></div>
+          <div class="ad-zone-text">
+            <div class="ad-zone-title">SHOP · LEONVEX</div>
+            <div class="ad-zone-sub">Catálogo de productos • Toca para ver</div>
+          </div>
         </div>
-        <div class="ad-zone-text">
-          <div class="ad-zone-title">NOVADENT</div>
-          <div class="ad-zone-sub">Consultorio Odontológico</div>
-        </div>
-      </a>
-      <div class="ad-zone shop-slide" id="shopSlide" role="button" tabindex="0">
-        <div class="ad-zone-icon shop-icon"><img src="shop-logo.png" alt="Shop LeonVex Studio"></div>
-        <div class="ad-zone-text">
-          <div class="ad-zone-title">SHOP · LEONVEX</div>
-          <div class="ad-zone-sub">Catálogo de productos • Toca para ver</div>
-        </div>
-      </div>
-      <a href="web24.html" target="_blank" rel="noopener" class="ad-zone web-slide">
-        <div class="ad-zone-icon web-icon">
-          <svg viewBox="0 0 24 24"><path d="M3 4h18c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 4v10h18V8H3zm2-2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm2.5 0a.75.75 0 100 1.5.75.75 0 000-1.5zM6 10h6v1.5H6V10zm0 3h12v1.5H6V13zm0 3h8v1.5H6V16z"/></svg>
-        </div>
-        <div class="ad-zone-text">
-          <div class="ad-zone-title">ESSTRADA WEB 24H</div>
-          <div class="ad-zone-sub">Tu negocio en Google y WhatsApp</div>
-        </div>
-      </a>
-      <div class="ad-dots" id="adDots"><button class="ad-dot on" aria-label="Anuncio 1"></button><button class="ad-dot" aria-label="Anuncio 2"></button><button class="ad-dot" aria-label="Anuncio 3"></button></div>
+        <a href="web24.html" target="_blank" rel="noopener" class="ad-zone web-slide">
+          <div class="ad-zone-icon web-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 4h18c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 4v10h18V8H3zm2-2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm2.5 0a.75.75 0 100 1.5.75.75 0 000-1.5zM6 10h6v1.5H6V10zm0 3h12v1.5H6V13zm0 3h8v1.5H6V16z"/></svg>
+          </div>
+          <div class="ad-zone-text">
+            <div class="ad-zone-title">ESSTRADA WEB 24H</div>
+            <div class="ad-zone-sub">Tu negocio en Google y WhatsApp</div>
+          </div>
+        </a>
+        <div class="ad-dots" id="adDots"><button class="ad-dot on" aria-label="Anuncio 1"></button><button class="ad-dot" aria-label="Anuncio 2"></button><button class="ad-dot" aria-label="Anuncio 3"></button></div>
       </div>
       <a href="https://wa.me/51963845681?text=Hola!%20Me%20interesa%20conocer%20más%20sobre%20el%20producto%20digital" target="_blank" class="whatsapp-btn-compact" title="Consultar por WhatsApp">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -612,24 +613,10 @@
   </div>
 </div>
 
-<!-- Sin crossorigin: así el audio de radios/búsqueda/local nunca queda silenciado por CORS -->
 <audio id="audio" preload="auto" playsinline></audio>
 
-<script>/* qrcode-generator (MIT) */var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1})},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(o*r,n*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});</script>
 <script>
-  // ====== PWA ======
-
-  // ====== MODAL QR ======
-  const qrModal = document.getElementById('qrModal');
-  const qrModalImage = document.getElementById('qrModalImage');
-  const qrError = document.getElementById('qrError');
-  document.getElementById('qrContainer').addEventListener('click', () => { qrModal.classList.add('active'); });
-  document.getElementById('qrModalClose').addEventListener('click', () => qrModal.classList.remove('active'));
-  qrModal.addEventListener('click', (e) => { if (e.target === qrModal) qrModal.classList.remove('active'); });
-  qrModalImage.addEventListener('error', () => { qrModalImage.style.display = 'none'; qrError.style.display = 'block'; });
-  qrModalImage.addEventListener('load', () => { qrModalImage.style.display = 'inline-block'; qrError.style.display = 'none'; });
-
-  // ====== DATOS ======
+  // Exactamente 8 estaciones (2 filas de 4 columnas)
   const radios = [
     { id: 'rpp', name: 'RPP', genre: 'Noticias', color: '#ff2d78', searchName: 'RPP' },
     { id: 'inolvidable', name: 'INOLVIDABLE', genre: 'Romántica', color: '#b14aed', searchName: 'La Inolvidable' },
@@ -638,8 +625,7 @@
     { id: 'studio92', name: 'STUDIO 92', genre: 'Pop', color: '#b4ff39', searchName: 'Studio 92' },
     { id: 'moda', name: 'MODA', genre: 'Pop Int.', color: '#ff2d78', searchName: 'Radio Moda' },
     { id: 'lazona', name: 'LA ZONA', genre: 'Rock', color: '#00f0ff', searchName: 'La Zona' },
-    { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica', alts: ['Ritmo Romántica', 'Radio Ritmo', 'Ritmo'] },
-    // ---- Tercera fila ----
+    { id: 'ritmo', name: 'RITMO', genre: 'Romántica', color: '#ff6b9d', searchName: 'Ritmo Romantica', alts: ['Ritmo Romántica', 'Radio Ritmo', 'Ritmo'] }
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -654,15 +640,12 @@
   const searchInput = $('searchInput'), searchBtn = $('searchBtn'), searchResults = $('searchResults'), ytLink = $('ytLink');
   const radioListContent = $('radioListContent'), uploadNotification = $('uploadNotification'), installBtn = $('installBtn');
 
-  let currentIndex = 0;          // índice de radio
-  let trackIndex = 0;            // índice de pista local / búsqueda / video
+  let currentIndex = 0;          
+  let trackIndex = 0;            
   let isPlaying = false, allPeruRadios = [], localTracks = [], localVideos = [], searchTracks = [];
   let currentSource = 'radio', radioCache = {}, deferredPrompt = null;
   let audioCtx, analyser, source, dataArray;
 
-  // ====== AUDIO / VISUALIZER ======
-  // Solo se conecta el analizador a audio LOCAL (blob). Para radios/iTunes (otro dominio) se usa
-  // reproducción directa, porque conectarlos al analizador sin CORS los deja mudos.
   function initAudioContext() {
     if (audioCtx) return;
     try {
@@ -671,6 +654,7 @@
       dataArray = new Uint8Array(analyser.frequencyBinCount);
     } catch (e) { audioCtx = null; analyser = null; }
   }
+  
   function resizeCanvas() {
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * window.devicePixelRatio;
@@ -727,6 +711,7 @@
     }
     ctx.globalAlpha = 1; ctx.shadowBlur = 0;
   }
+
   function getCurrentColor() {
     if (currentSource === 'radio' && radios[currentIndex]) return radios[currentIndex].color;
     if (currentSource === 'local') return '#b4ff39';
@@ -735,7 +720,6 @@
   }
   drawVisualizer();
 
-  // Conecta el analizador al audio solo cuando la fuente es local (blob, mismo origen)
   function connectAnalyserForLocal() {
     initAudioContext();
     if (!audioCtx || source) return;
@@ -745,7 +729,6 @@
     } catch (e) { source = null; }
   }
 
-  // ====== VIDEO ======
   function showVideoPlayer() { videoPlayer.classList.add('active'); canvas.style.display = 'none'; }
   function hideVideoPlayer() {
     videoPlayer.classList.remove('active'); canvas.style.display = 'block';
@@ -753,21 +736,23 @@
   }
   $('videoCloseBtn').addEventListener('click', () => {
     hideVideoPlayer();
-    if (currentSource === 'video' || currentSource === 'tv') { currentSource = 'radio'; renderTvGrid(); isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; }
+    if (currentSource === 'video' || currentSource === 'tv') { 
+      currentSource = 'radio'; renderTvGrid(); isPlaying = false; 
+      playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; 
+    }
   });
 
   function renderRadioGrid() {
     radioGrid.innerHTML = '';
     radios.forEach((radio, i) => {
       const card = document.createElement('div');
-      card.className = `radio-card radio-${radio.id}${radio.free ? ' free' : ''}${(i === currentIndex && currentSource === 'radio') ? ' active' : ''}`;
-      card.innerHTML = `<div class="radio-icon">${radio.free ? '+' : radio.name.charAt(0)}</div><div class="radio-name">${radio.name}</div>`;
+      card.className = `radio-card radio-${radio.id}${(i === currentIndex && currentSource === 'radio') ? ' active' : ''}`;
+      card.innerHTML = `<div class="radio-icon">${radio.name.charAt(0)}</div><div class="radio-name">${radio.name}</div>`;
       card.addEventListener('click', () => loadRadio(i, true));
       radioGrid.appendChild(card);
     });
   }
 
-  // ====== PANEL ======
   function openPanel(tab = 'radios') {
     mainPanel.classList.add('active'); switchTab(tab);
     if (tab === 'radios' && allPeruRadios.length === 0) loadPeruRadios();
@@ -789,7 +774,6 @@
   $('openSearchBtn').addEventListener('click', () => openPanel('search'));
   closePanelBtn.addEventListener('click', closePanel);
 
-  // ====== MÚSICA LOCAL ======
   uploadZone.addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
@@ -800,6 +784,7 @@
       else showNotification('FORMATO NO COMPATIBLE');
     }
   });
+
   function handleFiles(files) {
     let added = 0;
     Array.from(files).forEach(file => {
@@ -811,6 +796,7 @@
     if (added > 0) renderLocalMusic();
     return added;
   }
+
   function renderLocalMusic() {
     if (localTracks.length === 0) { localMusicList.innerHTML = '<div class="empty-state">No hay música local</div>'; return; }
     localMusicList.innerHTML = '';
@@ -835,7 +821,6 @@
     startAudio('local');
   }
 
-  // ====== VIDEO LOCAL ======
   videoUploadZone.addEventListener('click', () => videoInput.click());
   videoInput.addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
@@ -846,6 +831,7 @@
       else showNotification('FORMATO NO COMPATIBLE');
     }
   });
+
   function handleVideoFiles(files) {
     let added = 0;
     Array.from(files).forEach(file => {
@@ -857,6 +843,7 @@
     if (added > 0) renderLocalVideos();
     return added;
   }
+
   function renderLocalVideos() {
     if (localVideos.length === 0) { localVideoList.innerHTML = '<div class="empty-state">No hay videos</div>'; return; }
     localVideoList.innerHTML = '';
@@ -883,26 +870,28 @@
     const p = videoElement.play();
     if (p && p.catch) p.catch(() => { liveBadge.textContent = 'TOCA ▶'; });
   }
+
   videoElement.addEventListener('play', () => { isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; });
   videoElement.addEventListener('pause', () => { if (currentSource === 'video' || currentSource === 'tv') { isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; } });
   videoElement.addEventListener('ended', () => { if (currentSource === 'video' && localVideos.length > 1) playVideoLocal(trackIndex + 1); });
   videoElement.addEventListener('error', () => { if (currentSource === 'video' && videoElement.getAttribute('src')) { liveBadge.textContent = 'FORMATO NO SOPORTADO'; liveBadge.className = 'live-badge error'; } });
 
-  // ====== BÚSQUEDA ======
   searchBtn.addEventListener('click', doSearch);
   searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') doSearch(); });
-  // Jamendo = música COMPLETA y legal (artistas independientes). Para tu propio client_id gratis: devportal.jamendo.com
   const JAMENDO_CLIENT_ID = '709fa152';
+
   async function searchJamendo(q) {
     const url = `https://api.jamendo.com/v3.0/tracks/?client_id=${JAMENDO_CLIENT_ID}&format=json&limit=30&audioformat=mp32&imagesize=200&include=musicinfo&order=popularity_total&search=${encodeURIComponent(q)}`;
     const res = await fetch(url); const data = await res.json();
     return (data.results || []).filter(r => r.audio).map(r => ({ name: (r.name || '').toUpperCase(), artist: (r.artist_name || '').toUpperCase(), url: r.audio, cover: r.image || r.album_image || '', full: true }));
   }
+
   async function searchItunes(q) {
     const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&limit=30`);
     const data = await res.json();
     return (data.results || []).filter(r => r.previewUrl && r.trackName).map(r => ({ name: r.trackName.toUpperCase(), artist: r.artistName.toUpperCase(), url: r.previewUrl, cover: (r.artworkUrl100 || '').replace('100x100', '300x300'), full: false }));
   }
+
   async function doSearch() {
     const query = searchInput.value.trim(); if (!query) return;
     searchResults.innerHTML = '<div class="empty-state">BUSCANDO...</div>';
@@ -921,6 +910,7 @@
       searchResults.appendChild(item);
     });
   }
+
   function playSearch(i) {
     if (searchTracks.length === 0) return;
     trackIndex = (i + searchTracks.length) % searchTracks.length;
@@ -933,7 +923,6 @@
     startAudio('search');
   }
 
-  // ====== TV EN VIVO (HLS con respaldo automático) ======
   const TV_CHANNELS = [
     { name: "LATINA", short: "LATINA", urls: [
       "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
@@ -948,15 +937,15 @@
     { name: "RPP TV", short: "RPP TV", urls: [
       "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/rpptv/rpptv.smil/playlist.m3u8" ]},
   ];
-  // Más canales (botón OTROS). Solo señales https (las http las bloquea el navegador).
+
   const TV_EXTRA = [
     { name: "TV PERÚ", sub: "Canal del Estado", urls: [
       "https://cdnhd.iblups.com/hls/777b4d4cc0984575a7d14f6ee57dbcaf7.m3u8",
       "https://cablered.iptvperu.tv:1936/cablered/tvperu_new/playlist.m3u8" ]},
-    { name: "ATV", sub: "Puede estar bloqueado", urls: [
+    { name: "ATV", sub: "Señal abierta", urls: [
       "https://d2b5h5wyivfnfl.cloudfront.net/live/25046411-8673-4dec-8ae8-5b41984f34e1/ts:abr.m3u8",
       "https://d19e55ehz2il4i.cloudfront.net/ts:abr.m3u8" ]},
-    { name: "ATV+", sub: "Puede estar bloqueado", urls: [
+    { name: "ATV+", sub: "Noticias", urls: [
       "https://d26l0c7cli5gzs.cloudfront.net/ts:abr.m3u8" ]},
     { name: "GLOBAL TV", sub: "Variedades", urls: [
       "https://live-evg7.tv360.bitel.com.pe/bitel/global_abr/playlist.m3u8",
@@ -964,10 +953,10 @@
     { name: "LATINA NOTICIAS", sub: "24/7", urls: [
       "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latinanoticias/latinanoticias.smil/playlist.m3u8" ]},
   ];
-  let _seq = 0, _hls = null, _timer = null, tvIndex = -1, tvExtraIndex = -1;
 
-  // El reproductor HLS se sirve desde tu mismo sitio (hls.min.js); si faltara, usa la copia de internet
+  let _seq = 0, _hls = null, _timer = null, tvIndex = -1, tvExtraIndex = -1;
   let _hlsPromise = null;
+
   function loadHls() {
     if (window.Hls) return Promise.resolve();
     if (_hlsPromise) return _hlsPromise;
@@ -977,26 +966,27 @@
     _hlsPromise = load('hls.min.js').catch(() => load('https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js')).catch((e) => { _hlsPromise = null; throw e; });
     return _hlsPromise;
   }
-  // Precarga: baja el reproductor HLS y abre conexión con los servidores de TV ANTES de que toques un canal
+
   window.addEventListener('load', () => setTimeout(() => {
     loadHls().catch(() => {});
     const hosts = new Set();
     TV_CHANNELS.concat(TV_EXTRA).forEach(c => c.urls.forEach(u => { if (u.startsWith('https')) { try { hosts.add(new URL(u).origin); } catch (e) {} } }));
     hosts.forEach(o => { const l = document.createElement('link'); l.rel = 'preconnect'; l.href = o; document.head.appendChild(l); });
   }, 800));
+
   function stopChannel(video) {
     _seq++; clearTimeout(_timer);
     if (_hls) { try { _hls.destroy(); } catch (e) {} _hls = null; }
     video.onplaying = null; video.onerror = null; video.onwaiting = null; video.onstalled = null; video.ontimeupdate = null;
     video.pause(); video.removeAttribute('src'); video.load();
   }
+
   function playChannel(video, ch, status = () => {}) {
     stopChannel(video);
     const seq = ++_seq;
     let urls = location.protocol === 'https:' ? ch.urls.filter(u => u.startsWith('https')) : ch.urls.slice();
     const memKey = 'lv_tv_ok_' + ch.name;
     try { const good = localStorage.getItem(memKey); if (good && urls.includes(good)) urls = [good].concat(urls.filter(u => u !== good)); } catch (e) {}
-    // Ajustes pensados para datos móviles inestables: más colchón de video, más paciencia, y reconexión automática
     const START_TIMEOUT = 10000, STALL_TIMEOUT = 20000, MAX_CYCLES = 6, CYCLE_PAUSE = 3000;
     let i = 0, cycles = 0, stallTimer = null, netRetries = 0, mediaRecovers = 0, started = false;
     const clearAll = () => { clearTimeout(_timer); clearTimeout(stallTimer); };
@@ -1007,7 +997,6 @@
       if (seq !== _seq) return;
       teardown();
       if (i >= urls.length) {
-        // Terminó una vuelta por todas las señales: espera y reintenta (hasta MAX_CYCLES vueltas)
         if (!urls.length || ++cycles >= MAX_CYCLES) { status('Sin señal ahora mismo', true); return; }
         i = 0; status('Reconectando… (' + cycles + '/' + (MAX_CYCLES - 1) + ')');
         _timer = setTimeout(() => { if (seq === _seq) attempt(); }, CYCLE_PAUSE);
@@ -1021,14 +1010,13 @@
       status('Conectando… ' + i + '/' + urls.length);
       _timer = setTimeout(next, START_TIMEOUT);
 
-      // Si se queda cargando 20 s seguidos, recién ahí cambia de señal (antes era 8 s y cortaba de más)
       const armStall = () => { clearTimeout(stallTimer); stallTimer = setTimeout(() => { if (seq === _seq) { status('Señal lenta, probando otra…'); next(); } }, STALL_TIMEOUT); };
       const disarmStall = () => clearTimeout(stallTimer);
       video.onplaying = () => { if (seq !== _seq) return; clearTimeout(_timer); disarmStall(); started = true; cycles = 0; status('En vivo'); try { localStorage.setItem(memKey, url); } catch (e) {} };
       video.onwaiting = () => { if (seq === _seq && started && video.readyState < 3) armStall(); };
       video.onstalled = video.onwaiting;
       video.ontimeupdate = () => { if (seq === _seq && !video.paused) disarmStall(); };
-      video.onerror = () => { if (!started) next(); };   // una vez en marcha, deja que hls.js se recupere solo
+      video.onerror = () => { if (!started) next(); };
 
       loadHls().then(() => true, () => false).then(ok => {
         if (seq !== _seq) return;
@@ -1044,14 +1032,13 @@
             levelLoadingTimeOut: 10000, levelLoadingMaxRetry: 3, levelLoadingRetryDelay: 1000,
             fragLoadingTimeOut: 15000, fragLoadingMaxRetry: 4, fragLoadingRetryDelay: 1000
           });
-          // En datos móviles, limita la calidad a 480p (se ve bien en celular y se corta mucho menos)
           _hls.on(Hls.Events.MANIFEST_PARSED, () => {
             try { const lv = _hls.levels || []; if (!wantHD && lv.length > 1) { let cap = 0; lv.forEach((l, k) => { if ((l.height || 0) <= 480) cap = k; }); _hls.autoLevelCapping = cap; } } catch (e) {}
           });
           _hls.on(Hls.Events.ERROR, (e, d) => {
             if (!d.fatal || !_hls) return;
-            if (!started) { next(); return; }                      // esta señal nunca arrancó: pasa a la siguiente
-            if (d.type === Hls.ErrorTypes.NETWORK_ERROR && netRetries < 4) {   // se cortó la red un momento: reintenta sin cambiar de señal
+            if (!started) { next(); return; }
+            if (d.type === Hls.ErrorTypes.NETWORK_ERROR && netRetries < 4) {
               netRetries++; status('Reconectando señal…');
               setTimeout(() => { if (seq === _seq && _hls) { try { _hls.startLoad(); } catch (x) {} } }, 1200 * netRetries);
               return;
@@ -1071,6 +1058,7 @@
   }
 
   const TV_ICON = '<svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg>';
+  
   function renderTvGrid() {
     const grid = $('tvGrid'); if (!grid) return;
     grid.innerHTML = '';
@@ -1082,11 +1070,12 @@
       grid.appendChild(card);
     });
     const other = document.createElement('div');
-    other.className = 'radio-card tv-card tv-other' + '';
+    other.className = 'radio-card tv-card tv-other';
     other.innerHTML = `<div class="radio-icon">🌐</div><div class="radio-name">OTROS</div>`;
     other.addEventListener('click', openTvOther);
     grid.appendChild(other);
   }
+
   function renderTvOther() {
     const box = $('tvOtherList'); if (!box) return;
     box.innerHTML = '';
@@ -1098,12 +1087,10 @@
       item.addEventListener('click', () => { closePanel(); playTv(99, ch, k); });
       box.appendChild(item);
     });
-    const more = document.createElement('div'); more.className = 'list-item';
-    more.innerHTML = '<div class="list-item-cover">🌐</div><div class="list-item-info"><div class="list-item-name">MÁS EN FAMELACK</div><div class="list-item-sub">TV y radios de todo el mundo</div></div>';
-    more.addEventListener('click', () => window.open('https://famelack.com', '_blank', 'noopener'));
-    box.appendChild(more);
   }
+
   function openTvOther() { renderTvOther(); openPanel('tvother'); }
+
   function playTv(i, customCh, extraIdx) {
     const ch = customCh || TV_CHANNELS[i]; if (!ch) return;
     tvIndex = customCh ? 99 : i; tvExtraIndex = customCh ? (extraIdx == null ? -1 : extraIdx) : -1;
@@ -1120,11 +1107,9 @@
     });
   }
 
-  // ====== PUBLICIDAD: carrusel + catálogo SHOP ======
-  // Agrega productos aquí. Solo se muestran los que tengan stock > 0 (al llegar a 0 desaparecen solos).
-  // Ejemplo: { name: 'Polo Estampado', price: 35, stock: 8, img: 'polo.jpg', desc: 'Talla M' }
   const PRODUCTS = [];
   const SHOP_WA = '51963845681';
+
   function renderShop() {
     const box = $('shopList'); const items = PRODUCTS.filter(p => p.stock > 0);
     if (items.length === 0) { box.innerHTML = '<div class="empty-state">PRÓXIMAMENTE<br><br>Estamos preparando el catálogo</div>'; return; }
@@ -1140,6 +1125,7 @@
       box.appendChild(card);
     });
   }
+
   (function initAdCarousel() {
     const slides = document.querySelectorAll('#adCarousel .ad-zone'), dots = document.querySelectorAll('#adDots .ad-dot');
     let cur = 0, timer = null;
@@ -1153,14 +1139,13 @@
     start();
   })();
 
-  // ====== COMPARTIR / INSTALAR (QR del link de la app) — aislado: si falla, no afecta al resto ======
   try {
     (function initShare() {
       const modal = $('shareModal'), qrBox = $('shareQr'), urlBox = $('shareUrl'), inst = $('shareInstall');
       const appUrl = () => { const u = location.href.split('#')[0].split('?')[0]; return /^https?:/.test(u) ? u : ''; };
       function open() {
         const url = appUrl();
-        if (!url) { qrBox.innerHTML = ''; urlBox.textContent = 'Publica la app (Netlify) para generar el QR con su link.'; }
+        if (!url) { qrBox.innerHTML = ''; urlBox.textContent = 'Publica la app para generar el QR con su link.'; }
         else {
           try { const q = qrcode(0, 'M'); q.addData(url); q.make(); qrBox.innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); }
           catch (e) { qrBox.textContent = 'No se pudo generar el QR'; }
@@ -1190,49 +1175,7 @@
   } catch (e) { console.warn('share init', e); }
 
   try { if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){}); } catch (e) {}
-  // ====== ARRANQUE: la radio FANTOMS suena sola, con carga progresiva discreta (0 → 99 %) ======
-  const FANTOMS_INDEX = radios.findIndex(r => r.id === 'fantoms');
-  const BOOT_MS = 5000;
-  let bootActive = false, bootPct = 0, bootTimer = null, bootState = 'idle', bootStartAt = 0, streamRetries = 0;
-  function bootSet(p, msg, cls) {
-    bootPct = p; $('bootPct').textContent = p + '%'; $('bootFill').style.width = p + '%';
-    if (msg != null) { const m = $('bootMsg'); m.textContent = msg; m.className = 'boot-msg' + (cls ? ' ' + cls : ''); }
-  }
-  function bootHide(delay) { setTimeout(() => { const el = $('boot'); el.classList.add('fade'); setTimeout(() => { el.classList.remove('show'); el.style.display = 'none'; }, 550); }, delay || 0); }
-  function bootConnect() { bootState = 'connecting'; clearInterval(bootTimer); bootSet(99, 'Conectando…'); loadRadio(FANTOMS_INDEX, true); }
-  function bootCancel() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootHide(0); if (!isPlaying) { liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; } }
-  function bootBlocked() { bootState = 'blocked'; bootSet(99, 'Toca para escuchar', 'blocked'); }
-  function bootDone() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootSet(100, 'En vivo'); bootHide(700); }
-  function bootFail() { if (!bootActive) return; bootActive = false; clearInterval(bootTimer); bootSet(bootPct, 'Sin conexión'); bootHide(2200); }
-  // El primer toque en cualquier parte vacía de la pantalla es el permiso para sonar. Si toca un botón, se respeta lo que eligió.
-  function bootFirstTouch(e) {
-    if (!bootActive) { document.removeEventListener('pointerup', bootFirstTouch, true); return; }
-    if (bootState === 'connecting') return;
-    document.removeEventListener('pointerup', bootFirstTouch, true);
-    const t = e.target;
-    if (t && t.closest && t.closest('button, a, input, .radio-card, .tv-card, .list-item, .ad-zone, .main-panel, .qr-modal, .share-modal, .action-btn')) { bootCancel(); return; }
-    bootConnect();
-  }
-  function startBoot() {
-    const el = $('boot');
-    if (!el || FANTOMS_INDEX < 0) { if (el) el.style.display = 'none'; return; }
-    bootActive = true; bootStartAt = Date.now(); bootSet(0, 'Sintonizando…');
-    document.addEventListener('pointerup', bootFirstTouch, true);
-    // Abierta desde el ícono instalado (?launch=fantoms o modo app): conectar YA, como hace Mi Bulla
-    let fromApp = false;
-    try { fromApp = new URLSearchParams(location.search).get('launch') === 'fantoms' || matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) {}
-    bootState = 'connecting'; loadRadio(FANTOMS_INDEX, true);   // sin barra de progreso: conecta de una
-    bootTimer = setInterval(() => {
-      const t = Math.min(1, (Date.now() - bootStartAt) / BOOT_MS);
-      const p = Math.min(99, Math.floor(99 * (1 - Math.pow(1 - t, 3))));
-      if (p > bootPct) bootSet(p, p < 40 ? 'Sintonizando…' : p < 80 ? 'Cargando radio…' : 'Casi listo…');
-      if (t >= 1 && bootState === 'idle') bootConnect();
-    }, 90);
-    setTimeout(() => { if (bootActive) bootCancel(); }, 40000);   // tope de seguridad
-  }
 
-  // ====== RADIOS ======
-  // Radio-Browser tiene varios servidores; si uno está caído, usa el que responda primero
   const RB_MIRRORS = ['https://de1.api.radio-browser.info', 'https://de2.api.radio-browser.info', 'https://fi1.api.radio-browser.info', 'https://all.api.radio-browser.info'];
   async function rbFetch(path) {
     const one = async (base) => {
@@ -1243,6 +1186,7 @@
     if (Promise.any) return Promise.any(RB_MIRRORS.map(one));
     let lastErr; for (const b of RB_MIRRORS) { try { return await one(b); } catch (e) { lastErr = e; } } throw lastErr;
   }
+
   async function loadPeruRadios() {
     try {
       const data = await rbFetch('/json/stations/bycountry/Peru?hidebroken=true&limit=400');
@@ -1250,6 +1194,7 @@
       renderRadioList();
     } catch (e) { radioListContent.innerHTML = '<div class="empty-state">ERROR AL CARGAR<br><br>Revisa tu conexión</div>'; }
   }
+
   function renderRadioList() {
     radioListContent.innerHTML = '';
     allPeruRadios.forEach((radio, index) => {
@@ -1270,17 +1215,19 @@
     const secure = location.protocol === 'https:';
     const out = [];
     const add = (u) => { if (u && /^https?:/i.test(u) && !out.includes(u)) out.push(u); };
-    // primero las que ya son https; luego las http convertidas a https (muchos servidores lo aceptan); al final las http originales
     list.forEach(st => { [st.url_resolved, st.url].forEach(u => { if (u && u.startsWith('https:')) add(u); }); });
     list.forEach(st => { [st.url_resolved, st.url].forEach(u => { if (u && u.startsWith('http:') && secure) add(u.replace(/^http:/, 'https:')); }); });
     if (!secure) list.forEach(st => { [st.url_resolved, st.url].forEach(u => { if (u && u.startsWith('http:')) add(u); }); });
     return out.slice(0, 8);
   }
+
   const norm = (t) => (t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  
   async function searchStations(term, peruOnly, hideBroken) {
     const qs = '?name=' + encodeURIComponent(term) + (peruOnly ? '&countrycode=PE' : '') + '&hidebroken=' + hideBroken + '&order=clickcount&reverse=true&limit=80';
     return rbFetch('/json/stations/search' + qs);
   }
+
   async function findRadioUrls(searchName, alts) {
     if (radioCache[searchName] && radioCache[searchName].length) return radioCache[searchName];
     const terms = [searchName].concat(alts || []);
@@ -1293,10 +1240,8 @@
           let data = [];
           try { data = await searchStations(term, peruOnly, hide); } catch (e) { data = []; }
           data = (data || []).filter(st => st.url_resolved && st.name && !st.hls);
-          // coincidencia flexible: sin tildes, todas las palabras presentes (en cualquier orden)
           const rank = (a, b) => ((b.lastcheckok | 0) - (a.lastcheckok | 0)) || ((b.clickcount || 0) - (a.clickcount || 0));
           const strict = data.filter(st => { const n = norm(st.name); return tokens.every(t => n.includes(t)); }).sort(rank);
-          // al final, emisoras parecidas (misma primera palabra) por si las exactas están caídas
           const loose = tokens.length > 1 ? data.filter(st => !strict.includes(st) && norm(st.name).includes(tokens[0])).sort(rank) : [];
           const m = strict.concat(loose);
           if (m.length) { list = m; break outer; }
@@ -1309,34 +1254,20 @@
     return urls;
   }
 
-  // Prueba una lista de señales: si una falla o no arranca en 8 s, pasa a la siguiente
   let radioQueue = [], radioQi = 0, radioTimer = null, radioSeq = 0, radioActive = false, radioMemKey = null, radioFailed = false, radioAttempt = 0;
-  // Un intento puede fallar por 'error' Y por el rechazo de play(): solo cuenta una vez
+  
   function failRadioAttempt(seq) { if (seq !== radioSeq || radioFailed) return; radioFailed = true; tryNextRadio(seq); }
+  
   function playRadioQueue(urls, memKey) {
     radioSeq++; clearTimeout(radioTimer);
     radioQueue = urls || []; radioQi = 0; radioMemKey = memKey; radioActive = true;
     tryNextRadio(radioSeq);
   }
-  // Cuando una radio propia no conecta, revisa el túnel y muestra una pista corta bajo el nombre (ej. "TÚNEL 404")
-  async function diagStream() {
-    const r0 = radios[currentIndex]; if (!r0 || !r0.proxy) return;
-    let txt;
-    try {
-      const c = new AbortController(); const t = setTimeout(() => c.abort(), 8000);
-      const r = await fetch(r0.proxy, { cache: 'no-store', signal: c.signal });
-      clearTimeout(t);
-      const ct = (r.headers.get('content-type') || '').split(';')[0];
-      txt = 'TÚNEL ' + r.status + (ct ? ' ' + ct.replace('audio/', '') : '');
-      try { r.body && r.body.cancel(); } catch (e) {}
-    } catch (e) { txt = 'TÚNEL SIN RESPUESTA'; }
-    console.log('[diag]', r0.name, txt);
-    if (currentSource === 'radio' && radios[currentIndex] === r0 && !isPlaying) nowGenre.textContent = txt;
-  }
+
   function tryNextRadio(seq) {
     if (seq !== radioSeq || currentSource !== 'radio') return;
     clearTimeout(radioTimer); radioFailed = false;
-    if (radioQi >= radioQueue.length) { radioActive = false; setError(); try { diagStream(); } catch (e) {} return; }
+    if (radioQi >= radioQueue.length) { radioActive = false; setError(); return; }
     const url = radioQueue[radioQi++];
     liveBadge.textContent = 'CONECTANDO ' + radioQi + '/' + radioQueue.length; liveBadge.className = 'live-badge loading';
     const att = ++radioAttempt;
@@ -1349,29 +1280,31 @@
     if (loading) { liveBadge.textContent = 'CARGANDO...'; liveBadge.className = 'live-badge loading'; }
     else if (isPlaying) setPlayingBadge();
   }
+
   function setPlayingBadge() {
     if (currentSource === 'radio') { liveBadge.textContent = 'EN VIVO'; liveBadge.className = 'live-badge'; }
     else if (currentSource === 'local') { liveBadge.textContent = '♪ LOCAL'; liveBadge.className = 'live-badge local'; }
     else if (currentSource === 'search') { liveBadge.textContent = '♪ ONLINE'; liveBadge.className = 'live-badge searching'; }
   }
   function setSearching() { liveBadge.textContent = 'BUSCANDO...'; liveBadge.className = 'live-badge searching'; }
-  function setError() { liveBadge.textContent = 'OFFLINE'; liveBadge.className = 'live-badge error'; try { bootFail(); } catch (e) {} }
+  function setError() { liveBadge.textContent = 'OFFLINE'; liveBadge.className = 'live-badge error'; }
 
   function directUrls(radio) {
     const secure = location.protocol === 'https:'; const out = [];
     const add = (u) => { if (u && !out.includes(u)) out.push(u); };
     (radio.streams || []).forEach(u => {
       if (!/^http:/i.test(u) || !secure) { add(u); return; }
-      if (radio.proxy) add('/radio-proxy?url=' + encodeURIComponent(u)); // 1) túnel Netlify (mismo que usa tu otra app)
-      if (radio.proxy) add(radio.proxy);              // 2) túnel alterno /fantoms-stream
-      add(u.replace(/^http:/i, 'https:'));            // 2) misma dirección con https
-      add(u);                                         // 3) original (solo funciona si la página no es https)
+      if (radio.proxy) add('/radio-proxy?url=' + encodeURIComponent(u));
+      if (radio.proxy) add(radio.proxy);
+      add(u.replace(/^http:/i, 'https:'));
+      add(u);
     });
     return out;
   }
-  function nextRadioIndex(from, dir) { let i = from; for (let k = 0; k < radios.length; k++) { i = (i + dir + radios.length) % radios.length; if (!radios[i].free) return i; } return from; }
+
+  function nextRadioIndex(from, dir) { let i = from; for (let k = 0; k < radios.length; k++) { i = (i + dir + radios.length) % radios.length; return i; } return from; }
+  
   async function loadRadio(index, autoplay = false) {
-    if (radios[(index + radios.length) % radios.length].free) { showNotification('BOTÓN LIBRE'); return; }
     currentIndex = (index + radios.length) % radios.length;
     const radio = radios[currentIndex], my = currentIndex;
     nowTitle.textContent = radio.name; nowGenre.textContent = radio.genre; currentSource = 'radio'; hideVideoPlayer(); ytLink.classList.remove('show'); renderRadioGrid();
@@ -1381,10 +1314,11 @@
       if (radio.streams) { playRadioQueue(directUrls(radio), null); return; }
       let urls = [];
       try { urls = await findRadioUrls(radio.searchName, radio.alts); } catch (e) { urls = []; }
-      if (my !== currentIndex || currentSource !== 'radio') return;   // el usuario ya cambió de emisora
+      if (my !== currentIndex || currentSource !== 'radio') return;
       if (urls.length) playRadioQueue(urls, radio.searchName); else setError();
     }
   }
+
   function startAudio(kind, att) {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     setLoading(true);
@@ -1393,16 +1327,13 @@
       p.then(() => { isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setLoading(false); })
        .catch((err) => {
          if (err && err.name === 'AbortError') return;
-         if (err && err.name === 'NotAllowedError' && bootActive) { clearTimeout(radioTimer); radioActive = false; bootBlocked(); return; }
+         if (err && err.name === 'NotAllowedError') return;
          isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
          if (kind === 'radio' && radioActive && !(err && err.name === 'NotAllowedError')) { if (att === radioAttempt) failRadioAttempt(radioSeq); return; }
          setError(); });
     }
   }
-  function play() {
-    if (currentSource === 'local' || currentSource === 'search' || (currentSource === 'radio' && audio.src)) { startAudio(currentSource); }
-    else if (currentSource === 'radio') { loadRadio(currentIndex, true); }
-  }
+
   function pause() {
     if (currentSource === 'video' || currentSource === 'tv') videoElement.pause(); else audio.pause();
     isPlaying = false; playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; liveBadge.textContent = 'PAUSADO'; liveBadge.className = 'live-badge error';
@@ -1428,7 +1359,6 @@
   prevBtn.addEventListener('click', () => step(-1));
   nextBtn.addEventListener('click', () => step(1));
 
-  // Cuando termina una canción (local o preview de 30 s), pasa sola a la siguiente
   audio.addEventListener('ended', () => {
     if (currentSource === 'local' && localTracks.length > 0) playLocal(trackIndex + 1);
     else if (currentSource === 'search' && searchTracks.length > 0) playSearch(trackIndex + 1);
@@ -1439,13 +1369,10 @@
   audio.addEventListener('error', () => {
     if (!audio.getAttribute('src')) return;
     if (currentSource === 'radio' && radioActive) { failRadioAttempt(radioSeq); return; }
-    // radio propia que se cortó en pleno sonido: reconecta sola
-    if (currentSource === 'radio' && radios[currentIndex] && radios[currentIndex].streams && streamRetries < 6) { streamRetries++; const my = currentIndex; setTimeout(() => { if (currentSource === 'radio' && currentIndex === my) loadRadio(my, true); }, 2500); return; }
     setError();
   });
-  audio.addEventListener('ended', () => { if (currentSource === 'radio' && radios[currentIndex] && radios[currentIndex].streams) { const my = currentIndex; setTimeout(() => { if (currentSource === 'radio' && currentIndex === my) loadRadio(my, true); }, 1000); } });
   audio.addEventListener('waiting', () => { if (isPlaying) setLoading(true); });
-  audio.addEventListener('playing', () => { if (currentSource === 'radio') { try { bootDone(); } catch (e) {} streamRetries = 0; } if (currentSource === 'radio' && radioActive) { clearTimeout(radioTimer); radioActive = false; if (radioMemKey) { try { localStorage.setItem('lv_radio_ok_' + radioMemKey, audio.getAttribute('src')); } catch (e) {} } } isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
+  audio.addEventListener('playing', () => { if (currentSource === 'radio' && radioActive) { clearTimeout(radioTimer); radioActive = false; if (radioMemKey) { try { localStorage.setItem('lv_radio_ok_' + radioMemKey, audio.getAttribute('src')); } catch (e) {} } } isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
 
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.add('show'); });
   installBtn.addEventListener('click', async () => {
@@ -1457,9 +1384,9 @@
   async function preloadRadios() { for (const radio of radios) { if (!radio.searchName) continue; try { await findRadioUrls(radio.searchName, radio.alts); } catch (e) {} } }
   try { renderRadioGrid(); } catch (e) { console.error(e); }
   try { renderTvGrid(); } catch (e) { console.error(e); }
-  try { loadRadio(FANTOMS_INDEX >= 0 ? FANTOMS_INDEX : 0); } catch (e) { console.error(e); }
-  try { startBoot(); } catch (e) { console.error(e); const b = $('boot'); if (b) b.style.display = 'none'; }
+  try { loadRadio(0, false); } catch (e) { console.error(e); }
   try { preloadRadios(); } catch (e) { console.error(e); }
 </script>
 </body>
 </html>
+```
