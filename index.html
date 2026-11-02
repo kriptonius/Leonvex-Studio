@@ -1337,7 +1337,7 @@
       const r = await fetch(r0.proxy + '&_t=' + Date.now(), { cache: 'no-store', signal: c.signal });
       clearTimeout(t);
       const ct = (r.headers.get('content-type') || '').split(';')[0];
-      txt = 'TÚNEL ' + r.status + (ct ? ' ' + ct.replace('audio/', '') : '');
+      txt = 'TÚNEL ' + r.status + (ct ? ' ' + ct.replace('audio/', '') : '') + (typeof lastAudioErr === 'string' ? lastAudioErr : '');
       try { r.body && r.body.cancel(); } catch (e) {}
     } catch (e) { txt = 'TÚNEL SIN RESPUESTA'; }
     console.log('[diag]', r0.name, txt);
@@ -1346,12 +1346,22 @@
   function tryNextRadio(seq) {
     if (seq !== radioSeq || currentSource !== 'radio') return;
     clearTimeout(radioTimer); radioFailed = false;
-    if (radioQi >= radioQueue.length) { radioActive = false; setError(); try { diagStream(); } catch (e) {} return; }
+    if (radioQi >= radioQueue.length) {
+      radioActive = false;
+      const cur = radios[currentIndex];
+      if (cur && cur.streams && streamRetries < 5) {   // radio propia: reintenta sola con pausa creciente, sin dejar OFFLINE de inmediato
+        streamRetries++; const my = currentIndex, wait = 2500 * streamRetries;
+        liveBadge.textContent = 'RECONECTANDO ' + streamRetries + '/5'; liveBadge.className = 'live-badge loading';
+        setTimeout(() => { if (currentSource === 'radio' && currentIndex === my && !isPlaying) loadRadio(my, true); }, wait);
+        return;
+      }
+      setError(); try { diagStream(); } catch (e) {} return;
+    }
     const url = radioQueue[radioQi++];
     liveBadge.textContent = 'CONECTANDO ' + radioQi + '/' + radioQueue.length; liveBadge.className = 'live-badge loading';
     const att = ++radioAttempt;
     audio.src = url; startAudio('radio', att);
-    radioTimer = setTimeout(() => failRadioAttempt(seq), 8000);
+    radioTimer = setTimeout(() => failRadioAttempt(seq), /^\/radio-proxy/.test(url) ? 20000 : 8000);   // el túnel necesita más tiempo para empezar
   }
 
   function showNotification(msg) { uploadNotification.textContent = `✓ ${msg}`; uploadNotification.classList.add('show'); setTimeout(() => uploadNotification.classList.remove('show'), 3000); }
@@ -1445,8 +1455,10 @@
 
   volumeSlider.addEventListener('input', (e) => { const v = e.target.value; audio.volume = v; videoElement.volume = v; volumeLabel.textContent = Math.round(v * 100) + '%'; });
   audio.volume = 0.7; videoElement.volume = 0.7;
+  let lastAudioErr = '';
   audio.addEventListener('error', () => {
     if (!audio.getAttribute('src')) return;
+    try { lastAudioErr = ' E' + (audio.error ? audio.error.code : '?'); } catch (e) {}
     if (currentSource === 'radio' && radioActive) { failRadioAttempt(radioSeq); return; }
     // radio propia que se cortó en pleno sonido: reconecta sola
     if (currentSource === 'radio' && radios[currentIndex] && radios[currentIndex].streams && streamRetries < 6) { streamRetries++; const my = currentIndex; setTimeout(() => { if (currentSource === 'radio' && currentIndex === my) loadRadio(my, true); }, 2500); return; }
