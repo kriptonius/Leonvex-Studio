@@ -567,7 +567,16 @@
           <div class="ad-zone-sub">Tu negocio en Google y WhatsApp</div>
         </div>
       </a>
-      <div class="ad-dots" id="adDots"><button class="ad-dot on" aria-label="Anuncio 1"></button><button class="ad-dot" aria-label="Anuncio 2"></button><button class="ad-dot" aria-label="Anuncio 3"></button></div>
+      <div class="ad-zone jobs-slide" id="jobsSlide" role="button" tabindex="0">
+        <div class="ad-zone-icon" style="background:linear-gradient(135deg,#ff9500,#ff2d78)">
+          <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm10 15H4v-2h16v2zm0-4H4V8h16v7z"/></svg>
+        </div>
+        <div class="ad-zone-text">
+          <div class="ad-zone-title">EMPLEOS VRAEM</div>
+          <div class="ad-zone-sub">Chamba por horas, jornal o tiempo completo • Publica gratis</div>
+        </div>
+      </div>
+      <div class="ad-dots" id="adDots"><button class="ad-dot on" aria-label="Anuncio 1"></button><button class="ad-dot" aria-label="Anuncio 2"></button><button class="ad-dot" aria-label="Anuncio 3"></button><button class="ad-dot" aria-label="Anuncio 4"></button></div>
       </div>
       <a href="https://wa.me/51963845681?text=Hola!%20Me%20interesa%20conocer%20más%20sobre%20el%20producto%20digital" target="_blank" class="whatsapp-btn-compact" title="Consultar por WhatsApp">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1093,6 +1102,10 @@
   function renderTvOther() {
     const box = $('tvOtherList'); if (!box) return;
     box.innerHTML = '';
+    const ej = document.createElement('div'); ej.className = 'list-item';
+    ej.innerHTML = '<div class="list-item-cover">💼</div><div class="list-item-info"><div class="list-item-name">EMPLEOS VRAEM</div><div class="list-item-sub">Ofertas de trabajo • publica la tuya</div></div>';
+    ej.addEventListener('click', () => { closePanel(); try { openEmpleos(); } catch (e) { showNotification('EMPLEOS NO DISPONIBLE'); } });
+    box.appendChild(ej);
     const fi = radios.findIndex(r => r.id === 'fantoms');
     if (fi >= 0) {
       const fr = document.createElement('div'); fr.className = 'list-item';
@@ -1113,6 +1126,7 @@
     more.addEventListener('click', () => window.open('https://famelack.com', '_blank', 'noopener'));
     box.appendChild(more);
   }
+  function openEmpleos() { if (window.EmpleosVRAEM) window.EmpleosVRAEM.abrir(); else showNotification('CARGANDO EMPLEOS…'); }
   function openTvOther() { renderTvOther(); openPanel('tvother'); }
   function playTv(i, customCh, extraIdx) {
     const ch = customCh || TV_CHANNELS[i]; if (!ch) return;
@@ -1160,6 +1174,8 @@
     const openShop = () => { renderShop(); openPanel('shop'); };
     shop.addEventListener('click', openShop);
     shop.addEventListener('keypress', (e) => { if (e.key === 'Enter') openShop(); });
+    const jobs = $('jobsSlide');
+    if (jobs) { const openJobs = () => { try { openEmpleos(); } catch (e) { showNotification('EMPLEOS NO DISPONIBLE'); } }; jobs.addEventListener('click', openJobs); jobs.addEventListener('keypress', (e) => { if (e.key === 'Enter') openJobs(); }); }
     start();
   })();
 
@@ -1482,5 +1498,198 @@
   try { startBoot(); } catch (e) { console.error(e); const b = $('boot'); if (b) b.style.display = 'none'; }
   try { preloadRadios(); } catch (e) { console.error(e); }
 </script>
+<!-- ===== EMPLEOS VRAEM ===== -->
+<style>
+  .ev-overlay{--accent:#00f0ff;--bg:#05060a;--fg:#e8ecff;position:fixed;inset:0;z-index:9999;background:var(--bg);color:var(--fg);overflow-y:auto;font-family:'Space Grotesk',system-ui,sans-serif;font-size:15px;line-height:1.45;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(40px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+  .ev-overlay[hidden]{display:none}
+  .ev-wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+  .ev-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .ev-h1{margin:0;font-family:'Orbitron',system-ui,sans-serif;font-weight:700;font-size:24px;line-height:1;text-transform:uppercase}
+  .ev-h1 span{color:#ff9500}
+  .ev-sub{margin:6px 0 0;font-size:13.5px;color:#8d949e}
+  .ev-x{background:none;border:0;color:inherit;font-size:28px;line-height:1;padding:4px 10px;cursor:pointer}
+  .ev-btn{background:var(--accent);color:#05060a;border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+  .ev-btn.ghost{background:#1c2127;color:inherit;font-weight:500}
+  .ev-btn:focus-visible,.ev-in:focus-visible,.ev-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ev-in{background:#05060a;color:#e8ecff;border:1px solid #262b33;border-radius:8px;padding:10px 11px;font:inherit;font-size:15px;width:100%}
+  .ev-chips{display:flex;gap:8px;flex-wrap:wrap}
+  .ev-chip{background:none;border:1px solid #262b33;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;color:#8d949e;cursor:pointer}
+  .ev-chip[aria-pressed="true"]{background:#e8ecff;color:#05060a;border-color:#e8ecff}
+  .ev-card{background:#10141c;border:1px solid #262b33;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:9px;color:#e8ecff}
+  .ev-card h3{margin:0;font-size:16px;font-weight:600;overflow-wrap:anywhere}
+  .ev-who{font-size:12.5px;color:#8d949e;margin-top:2px}
+  .ev-meta{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:#8d949e}
+  .ev-meta b{color:#e8ecff;font-weight:600}
+  .ev-desc{margin:0;font-size:14px;overflow-wrap:anywhere}
+  .ev-row{display:flex;gap:8px;flex-wrap:wrap}
+  .ev-go{background:var(--accent);color:#05060a;border-radius:7px;padding:9px 13px;font-weight:700;font-size:13px;text-decoration:none;display:inline-block}
+  .ev-tag{font:600 10px 'Orbitron',monospace;letter-spacing:.08em;text-transform:uppercase;background:#ff9500;color:#05060a;border-radius:999px;padding:4px 9px;align-self:flex-start}
+  .ev-empty{border:1px dashed #262b33;border-radius:10px;padding:28px 14px;text-align:center;color:#8d949e}
+  .ev-form{background:#10141c;border:1px solid #262b33;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:11px}
+  .ev-form label{display:flex;flex-direction:column;gap:5px;font:600 11px 'Orbitron',monospace;letter-spacing:.08em;text-transform:uppercase;color:#8d949e}
+  .ev-form label .ev-in{font-family:'Space Grotesk',system-ui,sans-serif;text-transform:none;letter-spacing:0;font-weight:400}
+  .ev-msg{font-size:13px;color:#8d949e}
+  .ev-msg.ok{color:#9fd986}.ev-msg.err{color:#ff8b70}
+  .ev-foot{font:11px 'Orbitron',monospace;color:#8d949e;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .ev-foot button{background:none;border:0;color:inherit;font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+</style>
+
+<div class="ev-overlay" id="ev-overlay" hidden role="dialog" aria-label="Empleos VRAEM">
+  <div class="ev-wrap" id="ev-root"></div>
+</div>
+
+<script>
+(function(){
+  var EV_CONFIG = {
+    SUPABASE_URL: "PEGA_AQUI_TU_URL",           // ej. https://xxxx.supabase.co
+    SUPABASE_ANON_KEY: "PEGA_AQUI_TU_ANON_KEY"  // clave pública (anon), nunca la service_role
+  };
+  var MODS = ["Jornalito (por horas)","Por jornal","Tiempo completo","Medio tiempo","Jornal o tiempo completo"];
+  var FAST = MODS[0], DAY = 86400000;
+  var sb = null, items = [], filter = "Todos", q = "", view = "lista", admin = false, msg = null;
+  var overlay = document.getElementById("ev-overlay"), root = document.getElementById("ev-root");
+
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+  function digits(s){ return String(s||"").replace(/\D/g,""); }
+  function wa(n){ var d = digits(n); if(d.length===9) d = "51"+d; return "https://wa.me/"+d; }
+  function left(a){ return Math.max(0, Math.ceil((new Date(a.vence_at)-Date.now())/DAY)); }
+  function ready(){ return sb && EV_CONFIG.SUPABASE_URL.indexOf("PEGA_")!==0; }
+
+  // La librería de Supabase se descarga solo al abrir Empleos (no retrasa la radio ni la TV)
+  function loadLib(){
+    return new Promise(function(res){
+      if(window.supabase) return res(true);
+      var s = document.createElement("script");
+      s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
+      s.onload = function(){ res(true); }; s.onerror = function(){ res(false); };
+      document.head.appendChild(s);
+    });
+  }
+
+  async function load(){
+    if(!ready()){ items = []; return; }
+    var qy = sb.from("empleos").select("*").order("created_at",{ascending:false}).limit(200);
+    var r = await qy;
+    items = r.error ? [] : r.data;
+    if(r.error) msg = {t:"No se pudieron cargar las ofertas. Revisa tu conexión.", c:"err"};
+  }
+
+  function card(a, adm){
+    var h = '<article class="ev-card"><div><h3>'+esc(a.titulo)+'</h3><div class="ev-who">'+esc(a.empresa)+' · '+esc(a.ubicacion)+'</div></div>';
+    if(a.modalidad===FAST) h += '<span class="ev-tag">Jornalito · al toque</span>';
+    if(a.descripcion) h += '<p class="ev-desc">'+esc(a.descripcion)+'</p>';
+    h += '<div class="ev-meta"><span><b>'+esc(a.modalidad)+'</b></span>'+(a.pago?'<span>'+esc(a.pago)+'</span>':'')+
+         (adm?'<span>Estado: '+esc(a.estado)+'</span>':'<span>Vence en '+left(a)+' día'+(left(a)===1?'':'s')+'</span>')+'</div>';
+    h += '<div class="ev-row"><a class="ev-go" target="_blank" rel="noopener" href="'+esc(wa(a.contacto))+'">Escribir por WhatsApp</a>';
+    if(adm){
+      if(a.estado!=="aprobado") h += '<button class="ev-btn" data-ap="'+a.id+'" type="button">Aprobar</button>';
+      if(a.estado!=="rechazado") h += '<button class="ev-btn ghost" data-re="'+a.id+'" type="button">Rechazar</button>';
+      h += '<button class="ev-btn ghost" data-del="'+a.id+'" type="button">Eliminar</button>';
+    }
+    return h+'</div></article>';
+  }
+
+  function render(){
+    var h = '<div class="ev-top"><div><h1 class="ev-h1">Empleos <span>VRAEM</span></h1><p class="ev-sub">Chamba por horas, jornal o tiempo completo.</p></div><button class="ev-x" id="ev-close" type="button" aria-label="Cerrar">&times;</button></div>';
+    if(msg) h += '<div class="ev-msg '+msg.c+'">'+esc(msg.t)+'</div>';
+    if(view==="form"){
+      h += '<form class="ev-form" id="ev-form" autocomplete="off"><label>Qué trabajo es<input class="ev-in" id="evf-t" required maxlength="80" placeholder="Ej. Fumigar terreno con herbicida"></label>'+
+        '<label>Quién publica<input class="ev-in" id="evf-e" required maxlength="60" placeholder="Tu nombre o el de tu negocio"></label>'+
+        '<label>Dónde<input class="ev-in" id="evf-u" required maxlength="60" placeholder="Ej. Santa Rosa, VRAEM"></label>'+
+        '<label>Detalles (opcional)<textarea class="ev-in" id="evf-d" maxlength="400" rows="3"></textarea></label>'+
+        '<label>Modalidad<select class="ev-in" id="evf-m">'+MODS.map(function(m){return '<option>'+esc(m)+'</option>';}).join("")+'</select></label>'+
+        '<label>Pago (opcional)<input class="ev-in" id="evf-p" maxlength="60" placeholder="Ej. S/ 60 el jornal, o a tratar"></label>'+
+        '<label>WhatsApp de contacto<input class="ev-in" id="evf-c" required inputmode="tel" maxlength="20" placeholder="9 dígitos"></label>'+
+        '<label>Cuánto tiempo publicada<select class="ev-in" id="evf-v"><option value="7">7 días</option><option value="15" selected>15 días</option><option value="30">30 días</option></select></label>'+
+        '<div class="ev-msg">Se revisa antes de aparecer en la lista.</div>'+
+        '<div class="ev-row"><button class="ev-btn" type="submit">Enviar oferta</button><button class="ev-btn ghost" type="button" id="ev-back">Volver</button></div></form>';
+    } else if(view==="admin"){
+      var pend = items.filter(function(a){return a.estado==="pendiente";});
+      var rest = items.filter(function(a){return a.estado!=="pendiente";});
+      h += '<div class="ev-row"><button class="ev-btn ghost" id="ev-back" type="button">Volver a la lista</button><button class="ev-btn ghost" id="ev-out" type="button">Salir</button></div>';
+      h += '<div class="ev-msg">Por aprobar: '+pend.length+'</div>'+(pend.length?pend.map(function(a){return card(a,true);}).join(""):'<div class="ev-empty">Nada por aprobar.</div>');
+      if(rest.length) h += '<div class="ev-msg">Resto de ofertas</div>'+rest.map(function(a){return card(a,true);}).join("");
+    } else if(view==="login"){
+      h += '<form class="ev-form" id="ev-login"><label>Correo<input class="ev-in" id="evl-e" type="email" required autocomplete="username"></label><label>Clave<input class="ev-in" id="evl-p" type="password" required autocomplete="current-password"></label><div class="ev-row"><button class="ev-btn" type="submit">Entrar</button><button class="ev-btn ghost" id="ev-back" type="button">Volver</button></div></form>';
+    } else {
+      var vis = items.filter(function(a){
+        if(a.estado!=="aprobado" || new Date(a.vence_at)<=new Date()) return false;
+        if(filter!=="Todos" && a.modalidad!==filter) return false;
+        if(!q) return true;
+        return (a.titulo+" "+a.ubicacion+" "+a.empresa+" "+(a.descripcion||"")).toLowerCase().indexOf(q)>-1;
+      });
+      h += '<button class="ev-btn" id="ev-new" type="button">Publicar oferta</button>';
+      h += '<input class="ev-in" id="ev-q" type="search" placeholder="Buscar por trabajo, zona o empresa" value="'+esc(q)+'">';
+      h += '<div class="ev-chips">'+["Todos"].concat(MODS).map(function(o){return '<button type="button" class="ev-chip" data-f="'+esc(o)+'" aria-pressed="'+(o===filter)+'">'+esc(o.replace(" (por horas)",""))+'</button>';}).join("")+'</div>';
+      h += vis.length ? vis.map(function(a){return card(a,false);}).join("") :
+        '<div class="ev-empty">'+(ready()?'No hay ofertas por ahora. Publica la primera.':'Empleos VRAEM se está preparando. Vuelve pronto.')+'</div>';
+      h += '<div class="ev-foot"><span>Las ofertas vencen solas.</span><button type="button" id="ev-adm">'+(admin?'Panel de aprobación':'Administrador')+'</button></div>';
+    }
+    var keep = document.activeElement && document.activeElement.id;
+    root.innerHTML = h;
+    if(keep === "ev-q"){ var qi = document.getElementById("ev-q"); if(qi){ qi.focus(); qi.setSelectionRange(qi.value.length, qi.value.length); } }
+  }
+
+  async function go(v){ view = v; msg = null; if(v==="admin"||v==="lista") await load(); render(); }
+
+  root.addEventListener("click", async function(e){
+    var t = e.target, id;
+    if(t.id==="ev-close"){ overlay.hidden = true; document.body.style.overflow = ""; }
+    else if(t.id==="ev-new") go("form");
+    else if(t.id==="ev-back") go(admin && view==="admin" ? "lista" : "lista");
+    else if(t.id==="ev-adm") go(admin ? "admin" : "login");
+    else if(t.id==="ev-out"){ await sb.auth.signOut(); admin = false; go("lista"); }
+    else if(t.dataset.f){ filter = t.dataset.f; render(); }
+    else if(t.dataset.ap){ var d = parseInt((items.filter(function(a){return a.id===t.dataset.ap;})[0]||{}).dias,10)||15;
+      await sb.from("empleos").update({estado:"aprobado", vence_at:new Date(Date.now()+d*DAY).toISOString()}).eq("id",t.dataset.ap); await load(); render(); }
+    else if(t.dataset.re){ await sb.from("empleos").update({estado:"rechazado"}).eq("id",t.dataset.re); await load(); render(); }
+    else if(t.dataset.del){
+      if(t.dataset.armed){ await sb.from("empleos").delete().eq("id",t.dataset.del); await load(); render(); }
+      else { t.dataset.armed = "1"; t.textContent = "¿Seguro? Eliminar"; setTimeout(function(){ if(t.isConnected){ delete t.dataset.armed; t.textContent = "Eliminar"; } }, 3000); }
+    }
+  });
+  root.addEventListener("input", function(e){ if(e.target.id==="ev-q"){ q = e.target.value.trim().toLowerCase(); render(); } });
+
+  root.addEventListener("submit", async function(e){
+    e.preventDefault();
+    if(e.target.id==="ev-form"){
+      if(!ready()){ msg = {t:"Falta conectar Supabase.", c:"err"}; render(); return; }
+      var c = document.getElementById("evf-c").value.trim();
+      if(digits(c).length < 9){ msg = {t:"El WhatsApp debe tener al menos 9 dígitos.", c:"err"}; render(); return; }
+      var dias = parseInt(document.getElementById("evf-v").value,10)||15;
+      var r = await sb.from("empleos").insert({
+        titulo:document.getElementById("evf-t").value.trim(), empresa:document.getElementById("evf-e").value.trim(),
+        ubicacion:document.getElementById("evf-u").value.trim(), descripcion:document.getElementById("evf-d").value.trim()||null,
+        modalidad:document.getElementById("evf-m").value, pago:document.getElementById("evf-p").value.trim()||null,
+        contacto:c, dias:dias, vence_at:new Date(Date.now()+dias*DAY).toISOString()
+      });
+      if(r.error){ msg = {t:"No se pudo enviar. Revisa los datos e intenta de nuevo.", c:"err"}; render(); return; }
+      view = "lista"; msg = {t:"Oferta enviada. Aparecerá cuando se apruebe.", c:"ok"}; await load(); render();
+    }
+    if(e.target.id==="ev-login"){
+      var r2 = await sb.auth.signInWithPassword({email:document.getElementById("evl-e").value.trim(), password:document.getElementById("evl-p").value});
+      if(r2.error){ msg = {t:"Correo o clave incorrectos.", c:"err"}; render(); return; }
+      admin = true; go("admin");
+    }
+  });
+
+  // API pública: EmpleosVRAEM.abrir()
+  window.EmpleosVRAEM = {
+    abrir: async function(){
+      overlay.hidden = false; document.body.style.overflow = "hidden";
+      view = "lista"; msg = null; render();
+      if(!sb && EV_CONFIG.SUPABASE_URL.indexOf("PEGA_")!==0){
+        var ok = await loadLib();
+        if(ok && window.supabase) sb = window.supabase.createClient(EV_CONFIG.SUPABASE_URL, EV_CONFIG.SUPABASE_ANON_KEY);
+        else { msg = {t:"No se pudo cargar. Revisa tu conexión.", c:"err"}; }
+      }
+      if(sb){ try{ var s = await sb.auth.getSession(); admin = !!(s.data && s.data.session); }catch(_){} }
+      await load(); render();
+    }
+  };
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !overlay.hidden){ overlay.hidden = true; document.body.style.overflow = ""; } });
+})();
+</script>
+<!-- ===== FIN EMPLEOS VRAEM ===== -->
 </body>
 </html>
