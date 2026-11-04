@@ -220,6 +220,8 @@
 
   .tv-title { font-family: 'Orbitron', sans-serif; font-size: 10px; color: var(--text-dim); letter-spacing: 3px; margin: 18px 0 10px; text-align: center; }
   .tv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .tv-card { --glow: rgba(255, 122, 61, 0.2); --glow-b: rgba(255, 122, 61, 0.28); }
+  .tv-card.tv-other { --glow: rgba(122, 140, 255, 0.2); --glow-b: rgba(122, 140, 255, 0.28); }
   .tv-card .radio-icon { background: linear-gradient(135deg, #ff9500, #ff2d78); }
   .tv-card .radio-icon svg { width: 20px; height: 20px; fill: white; }
   .tv-card.tv-other .radio-icon { background: linear-gradient(135deg, #00f0ff, #b14aed); }
@@ -242,12 +244,13 @@
 
   .radio-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .radio-card {
-    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glow-b, rgba(255, 255, 255, 0.1));
+    box-shadow: 0 0 14px var(--glow, rgba(177, 74, 237, 0.14)), inset 0 0 10px var(--glow, rgba(177, 74, 237, 0.06));
     border-radius: 14px; padding: 10px 6px; cursor: pointer; transition: all 0.3s ease;
     position: relative; overflow: hidden; text-align: center;
   }
   .radio-card:hover { border-color: rgba(177, 74, 237, 0.4); transform: translateY(-2px); }
-  .radio-card.active { border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.08); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
+  .radio-card.active { border-color: var(--neon-cyan); background: rgba(0, 240, 255, 0.08); box-shadow: 0 0 18px rgba(0, 240, 255, 0.35), inset 0 0 10px rgba(0, 240, 255, 0.12); }
   .radio-card.active::after {
     content: ''; position: absolute; top: 6px; right: 6px; width: 6px; height: 6px;
     border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 8px var(--neon-lime); animation: pulse 1.5s infinite;
@@ -783,6 +786,7 @@
       if (radio.hidden) return;
       const card = document.createElement('div');
       card.className = `radio-card radio-${radio.id}${radio.free ? ' free' : ''}${(i === currentIndex && currentSource === 'radio') ? ' active' : ''}`;
+      if (!radio.free && /^#[0-9a-f]{6}$/i.test(radio.color || '')) { card.style.setProperty('--glow', radio.color + '36'); card.style.setProperty('--glow-b', radio.color + '47'); }
       card.innerHTML = `<div class="radio-icon">${radio.free ? '+' : radio.name.charAt(0)}</div><div class="radio-name">${radio.name}</div>`;
       card.addEventListener('click', () => loadRadio(i, true));
       radioGrid.appendChild(card);
