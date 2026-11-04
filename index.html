@@ -434,9 +434,7 @@
 <body>
 
 <div class="upload-notification" id="uploadNotification">✓ ARCHIVO SUBIDO</div>
-<button class="install-btn" id="installBtn" title="Instalar app">
-  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-</button>
+
 
 <!-- MODAL COMPARTIR / INSTALAR -->
 <div class="share-modal" id="shareModal">
@@ -677,7 +675,7 @@
   const fileInput = $('fileInput'), uploadZone = $('uploadZone'), localMusicList = $('localMusicList');
   const videoInput = $('videoInput'), videoUploadZone = $('videoUploadZone'), localVideoList = $('localVideoList');
   const searchInput = $('searchInput'), searchBtn = $('searchBtn'), searchResults = $('searchResults'), ytLink = $('ytLink');
-  const radioListContent = $('radioListContent'), uploadNotification = $('uploadNotification'), installBtn = $('installBtn');
+  const radioListContent = $('radioListContent'), uploadNotification = $('uploadNotification');
 
   let currentIndex = 0;          // índice de radio
   let trackIndex = 0;            // índice de pista local / búsqueda / video
@@ -1499,22 +1497,10 @@
   audio.addEventListener('waiting', () => { if (isPlaying) setLoading(true); });
   audio.addEventListener('playing', () => { if (currentSource === 'radio') { try { bootDone(); } catch (e) {} streamRetries = 0; } if (currentSource === 'radio' && radioActive) { clearTimeout(radioTimer); radioActive = false; if (radioMemKey) { try { localStorage.setItem('lv_radio_ok_' + radioMemKey, audio.getAttribute('src')); } catch (e) {} } } isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
 
-  // ====== BOTÓN INSTALAR (flecha gruesa): visible mientras la app no esté instalada; al tocarlo empieza la instalación ======
-  const isInstalled = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+  // La instalación queda solo en el botón INSTALAR del QR (ícono junto al título)
   if (window.__bip) deferredPrompt = window.__bip;
-  if (!isInstalled()) installBtn.classList.add('show');
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; window.__bip = e; if (!isInstalled()) installBtn.classList.add('show'); });
-  window.addEventListener('appinstalled', () => { deferredPrompt = null; window.__bip = null; installBtn.classList.remove('show'); showNotification('APP INSTALADA'); });
-  installBtn.addEventListener('click', async () => {
-    const ev = deferredPrompt || window.__bip;
-    if (!ev) { alert('Para instalar: abre el menú del navegador (⋮) y toca "Instalar app" o "Agregar a pantalla de inicio".'); return; }
-    try {
-      ev.prompt();
-      const { outcome } = await ev.userChoice;
-      if (outcome === 'accepted') installBtn.classList.remove('show');
-    } catch (e) {}
-    deferredPrompt = null; window.__bip = null;
-  });
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; window.__bip = e; });
+  window.addEventListener('appinstalled', () => { deferredPrompt = null; window.__bip = null; });
 
   async function preloadRadios() { for (const radio of radios) { if (!radio.searchName) continue; try { await findRadioUrls(radio.searchName, radio.alts); } catch (e) {} } }
   try { renderRadioGrid(); } catch (e) { console.error(e); }
