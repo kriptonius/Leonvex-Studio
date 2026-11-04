@@ -6,6 +6,7 @@
 <title>LeonVex Studio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#05060a">
+<script>window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__bip=e;});</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LeonVex">
@@ -1498,11 +1499,21 @@
   audio.addEventListener('waiting', () => { if (isPlaying) setLoading(true); });
   audio.addEventListener('playing', () => { if (currentSource === 'radio') { try { bootDone(); } catch (e) {} streamRetries = 0; } if (currentSource === 'radio' && radioActive) { clearTimeout(radioTimer); radioActive = false; if (radioMemKey) { try { localStorage.setItem('lv_radio_ok_' + radioMemKey, audio.getAttribute('src')); } catch (e) {} } } isPlaying = true; playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; setPlayingBadge(); });
 
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.classList.add('show'); });
+  // ====== BOTÓN INSTALAR (flecha gruesa): visible mientras la app no esté instalada; al tocarlo empieza la instalación ======
+  const isInstalled = () => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } };
+  if (window.__bip) deferredPrompt = window.__bip;
+  if (!isInstalled()) installBtn.classList.add('show');
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; window.__bip = e; if (!isInstalled()) installBtn.classList.add('show'); });
+  window.addEventListener('appinstalled', () => { deferredPrompt = null; window.__bip = null; installBtn.classList.remove('show'); showNotification('APP INSTALADA'); });
   installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) { alert('Abre el menú del navegador (⋮) y selecciona "Agregar a pantalla de inicio"'); return; }
-    deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') installBtn.classList.remove('show'); deferredPrompt = null;
+    const ev = deferredPrompt || window.__bip;
+    if (!ev) { alert('Para instalar: abre el menú del navegador (⋮) y toca "Instalar app" o "Agregar a pantalla de inicio".'); return; }
+    try {
+      ev.prompt();
+      const { outcome } = await ev.userChoice;
+      if (outcome === 'accepted') installBtn.classList.remove('show');
+    } catch (e) {}
+    deferredPrompt = null; window.__bip = null;
   });
 
   async function preloadRadios() { for (const radio of radios) { if (!radio.searchName) continue; try { await findRadioUrls(radio.searchName, radio.alts); } catch (e) {} } }
